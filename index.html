@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Tuition Centre - Online Admission & ERP Portal</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #f8fafc; color: #1e293b; }
+
+    /* Header */
+    header { background: #ffffff; border-bottom: 2px solid #e2e8f0; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .brand-title { font-size: 20px; font-weight: 900; color: #071f43; letter-spacing: -0.5px; }
+    .brand-tag { background: #facc15; color: #071f43; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin-left: 4px; }
+    .nav-btn { background: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; }
+
+    /* Hero */
+    .hero { background: linear-gradient(135deg, #071f43 0%, #1e40af 100%); color: white; padding: 70px 20px; text-align: center; }
+    .hero-badge { display: inline-block; background: rgba(255,255,255,0.12); color: #fef08a; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.2); }
+    .hero h1 { font-size: 38px; font-weight: 900; margin-bottom: 12px; line-height: 1.2; }
+    .hero p { font-size: 16px; color: #bfdbfe; max-width: 550px; margin: 0 auto 30px auto; line-height: 1.5; }
+    
+    /* Super Responsive Click Buttons */
+    .btn-main { background: #facc15; color: #071f43; font-size: 17px; font-weight: 900; padding: 15px 32px; border-radius: 30px; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(250, 204, 21, 0.4); transition: transform 0.1s; }
+    .btn-main:active { transform: scale(0.97); }
+
+    /* Features Grid */
+    .container { max-width: 850px; margin: -25px auto 40px auto; padding: 0 15px; position: relative; z-index: 10; }
+    .features-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .feat-card { background: white; padding: 18px 12px; border-radius: 14px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.03); }
+    .feat-card b { display: block; font-size: 13px; color: #071f43; margin-top: 5px; }
+    .feat-card span { font-size: 11px; color: #64748b; }
+
+    /* Tracking & Teacher Section */
+    .section-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; margin-top: 25px; }
+    .card-head { font-size: 18px; font-weight: 800; color: #071f43; margin-bottom: 4px; }
+    .card-desc { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+
+    /* MODERN HTML5 POPUP DIALOG (OPENS INSTANTLY ON 1-CLICK) */
+    dialog { border: none; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); width: 92%; max-width: 620px; margin: auto; padding: 0; }
+    dialog::backdrop { background: rgba(7, 31, 67, 0.75); backdrop-filter: blur(4px); }
+    .dialog-header { background: #071f43; color: white; padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; }
+    .dialog-body { padding: 22px; max-height: 82vh; overflow-y: auto; background: #ffffff; }
+    .btn-close { background: rgba(255,255,255,0.2); color: white; border: none; font-size: 18px; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; line-height: 1; font-weight: 800; }
+
+    /* Form Fields */
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px; }
+    .form-control { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; background: #f8fafc; }
+    .form-control:focus { border-color: #2563eb; background: #ffffff; }
+    .form-row { display: flex; gap: 12px; }
+    .form-col { flex: 1; }
+
+    .btn-submit { width: 100%; background: #071f43; color: white; padding: 13px; font-size: 15px; font-weight: 800; border-radius: 10px; border: none; cursor: pointer; margin-top: 10px; }
+
+    /* Tables & Badges */
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+    th, td { padding: 9px; border: 1px solid #e2e8f0; text-align: left; }
+    th { background: #f8fafc; font-weight: 700; color: #475569; }
+    .badge-paid { background: #dcfce7; color: #166534; padding: 3px 6px; border-radius: 4px; font-weight: 800; }
+    .badge-due { background: #fee2e2; color: #991b1b; padding: 3px 6px; border-radius: 4px; font-weight: 800; }
+    .btn-wa { background: #22c55e; color: white; padding: 5px 9px; border-radius: 5px; font-size: 11px; font-weight: 800; text-decoration: none; border: none; cursor: pointer; display: inline-block; }
+
+    @media (max-width: 600px) {
+      .features-row { grid-template-columns: repeat(2, 1fr); }
+      .form-row { flex-direction: column; gap: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= TOP CLEAN HEADER ================= -->
+  <header>
+    <div>
+      <span class="brand-title">FOCUS</span>
+      <span class="brand-tag">TUITION CENTRE</span>
+      <div style="font-size: 11px; color: #64748b; font-weight: 600; margin-top: 1px;">Chndghat Andharkoth (JAC Board Level)</div>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button type="button" onclick="document.getElementById('teacherModal').showModal()" class="nav-btn">Teacher Desk</button>
+    </div>
+  </header>
+
+  <!-- ================= BEAUTIFUL HERO ================= -->
+  <section class="hero">
+    <div class="hero-badge">✨ Session 2026-27 Admission Open ✨</div>
+    <h1>Better Education, <br><span style="color: #facc15;">Brighter Future</span></h1>
+    <p>Special coaching for Classes Nursery to 8th. Small batches, regular assessments & individual care.</p>
+    
+    <!-- 1-CLICK INSTANT POPUP OPEN BUTTON -->
+    <button type="button" class="btn-main" onclick="document.getElementById('admissionModal').showModal()">
+      Apply For Admission Now ⚡
+    </button>
+  </section>
+
+  <!-- ================= FEATURES & CLEAN INTERFACE ================= -->
+  <div class="container">
+    <div class="features-row">
+      <div class="feat-card">💡<b>Concept Clarity</b><span>Easy Understanding</span></div>
+      <div class="feat-card">📊<b>Tests & Progress</b><span>Regular Assessment</span></div>
+      <div class="feat-card">👥<b>Small Batches</b><span>Personal Attention</span></div>
+      <div class="feat-card">❤️<b>Supportive Care</b><span>Friendly Atmosphere</span></div>
+    </div>
+
+    <!-- Live Tracking Box -->
+    <div class="section-card">
+      <h3 class="card-head">Track Application Status</h3>
+      <p class="card-desc">Enter your tracking ID to check admission and verification</p>
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="trackInput" placeholder="Tracking ID (e.g. FTC-2026-1001)" class="form-control" style="text-transform: uppercase;" />
+        <button type="button" onclick="trackStudent()" style="background: #071f43; color: white; padding: 0 20px; font-weight: 800; border-radius: 8px; border: none; cursor: pointer;">Track</button>
+      </div>
+      <div id="trackResult" style="display: none; margin-top: 12px; padding: 12px; background: #f1f5f9; border-radius: 8px; font-size: 13px;">
+        <p><b>Student:</b> <span id="resName">-</span> | <b>Class:</b> <span id="resClass">-</span></p>
+        <p style="margin-top: 4px;"><b>Status:</b> <span id="resStatus" class="badge-paid">Approved</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 1. INSTANT ADMISSION POPUP (MODERN DIALOG) ================= -->
+  <dialog id="admissionModal">
+    <div class="dialog-header">
+      <div>
+        <h3 style="font-size: 16px; font-weight: 800;">Online Admission Application</h3>
+        <small style="color: #93c5fd; font-size: 11px;">Focus Tuition Centre | Chndghat Andharkoth</small>
+      </div>
+      <button type="button" class="btn-close" onclick="document.getElementById('admissionModal').close()">✕</button>
+    </div>
+
+    <div class="dialog-body">
+      <!-- Step 1: Input Form -->
+      <form id="admissionForm" onsubmit="submitAdmission(event)">
+        <div class="form-row">
+          <div class="form-col form-group">
+            <label>Student Full Name *</label>
+            <input type="text" id="stdName" class="form-control" required placeholder="Full Name" />
+          </div>
+          <div class="form-col form-group">
+            <label>Class Seeking Admission *</label>
+            <select id="stdClass" class="form-control" required>
+              <option value="">-- Select Class --</option>
+              <option value="Nursery">Nursery</option>
+              <option value="LKG">LKG</option>
+              <option value="UKG">UKG</option>
+              <option value="Class 1">Class 1</option>
+              <option value="Class 2">Class 2</option>
+              <option value="Class 3">Class 3</option>
+              <option value="Class 4">Class 4</option>
+              <option value="Class 5">Class 5</option>
+              <option value="Class 6">Class 6</option>
+              <option value="Class 7">Class 7</option>
+              <option value="Class 8">Class 8</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-col form-group">
+            <label>Father's Name *</label>
+            <input type="text" id="stdFather" class="form-control" required placeholder="Father's Name" />
+          </div>
+          <div class="form-col form-group">
+            <label>Father's Occupation *</label>
+            <select id="stdOccupation" class="form-control" required>
+              <option value="Farmer">Farmer</option>
+              <option value="Business">Business / Trader</option>
+              <option value="Govt/Private Job">Job (Govt / Pvt)</option>
+              <option value="Worker">Worker</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-col form-group">
+            <label>Mobile Number (For WhatsApp) *</label>
+            <input type="tel" id="stdMobile" pattern="[0-9]{10}" class="form-control" required placeholder="10-digit number" />
+          </div>
+          <div class="form-col form-group">
+            <label>Guardian Name *</label>
+            <input type="text" id="stdGuardian" class="form-control" required placeholder="Guardian's Name" />
+          </div>
+        </div>
+
+        <!-- FAST ZERO-DELAY DISTRICT POPULATOR -->
+        <div class="form-row">
+          <div class="form-col form-group">
+            <label>State *</label>
+            <select id="stdState" class="form-control" required onchange="loadDistrictsFast()">
+              <option value="">-- Select State --</option>
+              <option value="Jharkhand">Jharkhand</option>
+              <option value="Bihar">Bihar</option>
+              <option value="West Bengal">West Bengal</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-col form-group">
+            <label>District *</label>
+            <select id="stdDistrict" class="form-control" required>
+              <option value="">-- Select State First --</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Full Village / Landmark Address *</label>
+          <input type="text" id="stdAddress" class="form-control" required placeholder="Village, Landmark, Post" />
+        </div>
+
+        <!-- FREE COUPON CODE -->
+        <div style="background: #fefce8; border: 1px dashed #ca8a04; padding: 10px; border-radius: 8px; margin: 12px 0;">
+          <small style="font-weight: 800; color: #854d0e;">Have Free Coupon Code? (Use: <b>FREE100</b>)</small>
+          <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <input type="text" id="couponInput" placeholder="Enter coupon" class="form-control" style="text-transform: uppercase;" />
+            <button type="button" onclick="applyCoupon()" style="background: #eab308; color: black; font-weight: 800; padding: 0 14px; border-radius: 6px; border: none; cursor: pointer;">Apply</button>
+          </div>
+          <div id="couponMsg" style="font-size: 11px; font-weight: bold; margin-top: 4px; display: none;"></div>
+        </div>
+
+        <div style="text-align: center; padding: 8px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px;">
+          Payable Fee: <b id="feeLabel" style="color: #16a34a; font-size: 16px;">₹100</b>
+        </div>
+
+        <button type="submit" class="btn-submit">Submit Admission & Get Slip</button>
+      </form>
+
+      <!-- Step 2: Post Submission Success -->
+      <div id="postSubmitBox" style="display: none; text-align: center; padding: 15px 0;">
+        <div style="width: 50px; height: 50px; background: #dcfce7; color: #15803d; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 10px auto; font-weight: 900;">✓</div>
+        <h3 style="font-size: 18px; font-weight: 800; color: #071f43;">Admission Registered!</h3>
+        <p style="font-size: 12px; color: #64748b; margin-top: 4px;">Your Official Tracking Number:</p>
+        <div id="issuedId" style="font-size: 24px; font-weight: 900; color: #1e40af; font-family: monospace; margin: 10px 0;">-</div>
+        
+        <button type="button" onclick="printSlip()" style="background: #16a34a; color: white; padding: 10px 22px; font-weight: 800; border-radius: 8px; border: none; cursor: pointer;">
+          🖨️ Print / Download Slip
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ================= 2. TEACHER ERP MODAL ================= -->
+  <dialog id="teacherModal">
+    <div class="dialog-header">
+      <h3 style="font-size: 16px; font-weight: 800;">Teacher Portal & Fee Reminder (₹300/mo)</h3>
+      <button type="button" class="btn-close" onclick="document.getElementById('teacherModal').close()">✕</button>
+    </div>
+
+    <div class="dialog-body">
+      <!-- Login Form -->
+      <div id="teacherLoginForm">
+        <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Login with authorized credentials (Tarique / Abdullah / Ehtesab)</p>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="tUser" class="form-control" placeholder="tarique / abdullah / ehtesab" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="tPass" class="form-control" placeholder="focus123" />
+        </div>
+        <button type="button" onclick="loginTeacher()" class="btn-submit">Login to Desk</button>
+      </div>
+
+      <!-- Dashboard Workspace -->
+      <div id="teacherWorkspace" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 12px;">
+          <div><b>Faculty:</b> <span id="loggedFaculty" style="color: #5b21b6; font-weight: 800;">-</span></div>
+          <button type="button" onclick="logoutTeacher()" style="background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 6px; border: none; font-size: 11px; font-weight: 800; cursor: pointer;">Logout</button>
+        </div>
+
+        <p style="font-size: 12px; color: #475569; font-weight: 600;">Monthly Fee: <b>₹300</b> | Due notices sent directly via WhatsApp:</p>
+
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Class</th>
+                <th>Mobile</th>
+                <th>Due Months</th>
+                <th>Total Due</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="rosterTable"></tbody>
+          </table>
+        </div>
+        <p id="noStudentsMsg" style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px 0;">No students enrolled yet.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ================= JAVASCRIPT LOGIC (FAST & PURE) ================= -->
+  <script>
+    // Fast State to District Data
+    const districtDB = {
+      Jharkhand: ["Pakur", "Sahibganj", "Dumka", "Godda", "Deoghar", "Jamtara", "Ranchi", "Dhanbad", "Bokaro", "Giridih"],
+      Bihar: ["Katihar", "Purnia", "Bhagalpur", "Banka", "Patna", "Gaya"],
+      West Bengal: ["Murshidabad", "Malda", "Birbhum", "Kolkata"],
+      Other: ["Other District"]
+    };
+
+    function loadDistrictsFast() {
+      const state = document.getElementById("stdState").value;
+      const distSelect = document.getElementById("stdDistrict");
+      distSelect.innerHTML = '<option value="">-- Select District * --</option>';
+
+      if (state && districtDB[state]) {
+        districtDB[state].forEach(d => {
+          const opt = document.createElement("option");
+          opt.value = d; opt.textContent = d;
+          distSelect.appendChild(opt);
+        });
+      }
+    }
+
+    // Coupon Handler
+    let isFreePass = false;
+    function applyCoupon() {
+      const code = document.getElementById("couponInput").value.trim().toUpperCase();
+      const msg = document.getElementById("couponMsg");
+      msg.style.display = "block";
+
+      if (code === "FREE100" || code === "FOCUSFREE" || code === "EHTESAB100") {
+        isFreePass = true;
+        msg.style.color = "#16a34a";
+        msg.innerText = "✓ 100% Free Coupon Applied! Fee is ₹0.";
+        document.getElementById("feeLabel").innerText = "₹0 (FREE)";
+      } else {
+        isFreePass = false;
+        msg.style.color = "#dc2626";
+        msg.innerText = "Invalid coupon code!";
+        document.getElementById("feeLabel").innerText = "₹100";
+      }
+    }
+
+    // LocalStorage Database
+    function getStore() { return JSON.parse(localStorage.getItem("focus_app_roster") || "[]"); }
+    function saveStore(data) { localStorage.setItem("focus_app_roster", JSON.stringify(data)); }
+
+    let lastCreatedApp = null;
+
+    // Admission Form Submit
+    function submitAdmission(e) {
+      e.preventDefault();
+      const newId = "FTC-2026-" + Math.floor(1000 + Math.random() * 9000);
+
+      const record = {
+        id: newId,
+        name: document.getElementById("stdName").value,
+        className: document.getElementById("stdClass").value,
+        father: document.getElementById("stdFather").value,
+        mobile: document.getElementById("stdMobile").value,
+        guardian: document.getElementById("stdGuardian").value,
+        state: document.getElementById("stdState").value,
+        district: document.getElementById("stdDistrict").value,
+        address: document.getElementById("stdAddress").value,
+        feeStatus: isFreePass ? "Free (Coupon)" : "Paid ₹100",
+        dueMonths: 1, // Default 1 month
+        isTuitionPaid: false,
+        status: "Approved"
+      };
+
+      const store = getStore();
+      store.push(record);
+      saveStore(store);
+
+      lastCreatedApp = record;
+
+      // Switch to success view inside popup
+      document.getElementById("admissionForm").style.display = "none";
+      document.getElementById("issuedId").innerText = newId;
+      document.getElementById("postSubmitBox").style.display = "block";
+    }
+
+    // Direct Print Slip
+    function printSlip() {
+      if (!lastCreatedApp) return;
+      const win = window.open('', '', 'width=650,height=500');
+      win.document.write(`
+        <div style="font-family:sans-serif; padding:30px; border:3px solid #071f43;">
+          <h2 style="margin:0; color:#071f43;">FOCUS TUITION CENTRE</h2>
+          <p style="color:#d97706; margin:4px 0 15px 0;">Chndghat Andharkoth | Nursery to 8th</p>
+          <hr/>
+          <p><b>Tracking ID:</b> ${lastCreatedApp.id}</p>
+          <p><b>Student Name:</b> ${lastCreatedApp.name}</p>
+          <p><b>Class:</b> ${lastCreatedApp.className}</p>
+          <p><b>Father's Name:</b> ${lastCreatedApp.father}</p>
+          <p><b>Mobile:</b> ${lastCreatedApp.mobile}</p>
+          <p><b>Registration Fee:</b> ${lastCreatedApp.feeStatus}</p>
+          <p><b>Address:</b> ${lastCreatedApp.address}, ${lastCreatedApp.district}, ${lastCreatedApp.state}</p>
+          <hr/>
+          <p style="text-align:right; margin-top:25px;"><b>Focus Tuition Centre Authority</b></p>
+        </div>
+      `);
+      win.print();
+    }
+
+    // Tracking
+    function trackStudent() {
+      const q = document.getElementById("trackInput").value.trim().toUpperCase();
+      const store = getStore();
+      const found = store.find(s => s.id === q);
+
+      if (!found) {
+        alert("No student found with this ID!");
+        return;
+      }
+
+      document.getElementById("trackResult").style.display = "block";
+      document.getElementById("resName").innerText = found.name;
+      document.getElementById("resClass").innerText = found.className;
+      document.getElementById("resStatus").innerText = "Admission Confirmed";
+    }
+
+    // Teacher Auth
+    let teacherFaculty = null;
+    function loginTeacher() {
+      const u = document.getElementById("tUser").value.trim().toLowerCase();
+      const p = document.getElementById("tPass").value.trim();
+
+      if ((u === "tarique" || u === "abdullah" || u === "ehtesab") && p === "focus123") {
+        teacherFaculty = u.toUpperCase();
+        document.getElementById("loggedFaculty").innerText = teacherFaculty;
+        document.getElementById("teacherLoginForm").style.display = "none";
+        document.getElementById("teacherWorkspace").style.display = "block";
+        renderRoster();
+      } else {
+        alert("Invalid Teacher Credentials! (Use: tarique / focus123)");
+      }
+    }
+
+    function logoutTeacher() {
+      teacherFaculty = null;
+      document.getElementById("teacherLoginForm").style.display = "block";
+      document.getElementById("teacherWorkspace").style.display = "none";
+    }
+
+    // Teacher Roster & WhatsApp Notice (₹300/mo)
+    function renderRoster() {
+      const store = getStore();
+      const tbody = document.getElementById("rosterTable");
+      const noMsg = document.getElementById("noStudentsMsg");
+      tbody.innerHTML = "";
+
+      if (store.length === 0) {
+        noMsg.style.display = "block";
+        return;
+      }
+      noMsg.style.display = "none";
+
+      store.forEach((st, idx) => {
+        const tr = document.createElement("tr");
+        const months = st.dueMonths || 1;
+        const total = st.isTuitionPaid ? 0 : months * 300;
+
+        tr.innerHTML = `
+          <td><b>${st.name}</b></td>
+          <td>${st.className}</td>
+          <td>${st.mobile}</td>
+          <td>
+            ${st.isTuitionPaid ? '0 Months' : `
+              <select onchange="changeMonths(${idx}, this.value)">
+                <option value="1" ${months == 1 ? 'selected' : ''}>1 Mo (₹300)</option>
+                <option value="2" ${months == 2 ? 'selected' : ''}>2 Mo (₹600)</option>
+                <option value="3" ${months == 3 ? 'selected' : ''}>3 Mo (₹900)</option>
+              </select>
+            `}
+          </td>
+          <td><b>₹${total}</b></td>
+          <td>${st.isTuitionPaid ? '<span class="badge-paid">Paid</span>' : '<span class="badge-due">Due</span>'}</td>
+          <td>
+            ${st.isTuitionPaid 
+              ? `<button type="button" onclick="setFeeStatus(${idx}, false)" style="cursor:pointer; font-size:11px;">Mark Due</button>` 
+              : `<button type="button" onclick="setFeeStatus(${idx}, true)" style="cursor:pointer; font-size:11px; background:#16a34a; color:white; border:none; padding:3px 6px; border-radius:4px; margin-right:3px;">Mark Paid</button>
+                 <button type="button" onclick="sendWhatsApp('${st.name}', '${st.className}', '${st.mobile}', ${months}, ${total})" class="btn-wa">Notice</button>`
+            }
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function changeMonths(idx, val) {
+      const store = getStore();
+      store[idx].dueMonths = parseInt(val);
+      saveStore(store);
+      renderRoster();
+    }
+
+    function setFeeStatus(idx, isPaid) {
+      const store = getStore();
+      store[idx].isTuitionPaid = isPaid;
+      saveStore(store);
+      renderRoster();
+    }
+
+    // Direct WhatsApp Notice
+    function sendWhatsApp(name, cls, mobile, months, total) {
+      if (!mobile || mobile.length < 10) {
+        alert("Mobile number is invalid!");
+        return;
+      }
+
+      const clean = mobile.replace(/[^0-9]/g, '');
+      const phone = clean.length === 10 ? '91' + clean : clean;
+      const tName = teacherFaculty || "Focus Tuition Centre";
+
+      const msg = 
+`*Focus Tuition Centre, Chndghat Andharkoth*
+------------------------------------
+*फीस बकाया सूचना पत्र (Fee Reminder Notice)*
+
+आदरणीय अभिभावक, सादर प्रणाम।
+
+यह सूचना आपके बच्चे *${name}* (कक्षा: *${cls}*) की ट्यूशन फीस के संबंध में है।
+
+• *बकाया माह (Due Period):* ${months} महीना
+• *कुल बकाया राशि (Total Due):* ₹${total} (₹300/माह)
+
+कृपया समय पर फीस जमा करने की कृपा करें।
+धन्यवाद!
+_शिक्षक: ${tName}_`;
+
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+  </script>
+
+</body>
+</html>
