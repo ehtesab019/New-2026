@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Tuition Centre - Online Admission & Teacher Portal</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- html2pdf Library for Instant PDF Downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .hero-gradient { background: linear-gradient(135deg, #071f43 0%, #0f3e7e 60%, #1d61bd 100%); }
+    .glass-nav { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
+    .stamp-badge {
+      border: 3px double #15803d;
+      border-radius: 8px;
+      color: #15803d;
+      text-transform: uppercase;
+      font-weight: 900;
+      padding: 6px 14px;
+      display: inline-block;
+      transform: rotate(-3deg);
+      background: #f0fdf4;
+    }
+    #slipTemplate, #finalAdmissionTemplate { display: none; }
+  </style>
+
+  <!-- BULLETPROOF DIRECT MODAL SCRIPT IN HEAD (NEVER FAILS ON CLICK) -->
+  <script>
+    function openAdmissionModal() {
+      try {
+        const form = document.getElementById("studentAdmissionForm");
+        if(form) form.reset();
+        const payForm = document.getElementById("paymentVerifyForm");
+        if(payForm) payForm.reset();
+        
+        document.getElementById("editApplicationId").value = "";
+        document.getElementById("admissionInputSection").style.display = "block";
+        document.getElementById("admissionPaymentSection").style.display = "none";
+        document.getElementById("admissionSuccessSection").style.display = "none";
+        
+        // Reset coupon display
+        document.getElementById("feeAmountDisplay").innerText = "₹100";
+        document.getElementById("couponInput").value = "";
+        document.getElementById("couponMessage").style.display = "none";
+        document.getElementById("qrPaymentContainer").style.display = "block";
+        document.getElementById("utrInputFieldContainer").style.display = "block";
+        document.getElementById("cashOptionContainer").style.display = "block";
+        document.getElementById("payNowBtnText").innerText = "Pay ₹100 & Download Registration Slip";
+      } catch(err) {
+        console.log(err);
+      }
+      document.getElementById("studentAdmissionModal").style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeAdmissionModal() {
+      document.getElementById("studentAdmissionModal").style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+
+    function openTeacherModal() {
+      document.getElementById("teacherAuthModal").style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeTeacherModal() {
+      document.getElementById("teacherAuthModal").style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-yellow-400 selection:text-blue-950">
+
+  <!-- ================= TOP NAVBAR ================= -->
+  <header class="glass-nav sticky top-0 z-40 border-b border-slate-200/80 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 bg-blue-950 text-yellow-400 rounded-2xl flex items-center justify-center text-2xl shadow-md border border-blue-800">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-2xl font-black text-blue-950 tracking-tight">FOCUS</span>
+            <span class="text-[11px] bg-yellow-400 text-blue-950 font-black px-2 py-0.5 rounded-md uppercase tracking-wider">Tuition Centre</span>
+          </div>
+          <p class="text-xs font-semibold text-slate-500 flex items-center gap-1">
+            <i class="fa-solid fa-location-dot text-rose-500 text-[10px]"></i> Chndghat Andharkoth (JAC Board Level)
+          </p>
+        </div>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="#tracking-section" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-blue-950 bg-slate-100 hover:bg-slate-200 px-3.5 py-2.5 rounded-xl transition">
+          <i class="fa-solid fa-compass text-slate-500"></i> Track Application
+        </a>
+
+        <!-- Teacher Desk Button (Guaranteed Click) -->
+        <button type="button" onclick="openTeacherModal()" class="inline-flex items-center gap-1.5 text-xs font-bold text-purple-950 bg-purple-50 hover:bg-purple-100 border border-purple-200 px-3.5 sm:px-4 py-2.5 rounded-xl transition shadow-sm cursor-pointer">
+          <i class="fa-solid fa-user-shield text-purple-700"></i>
+          <span>Teacher Desk</span>
+        </button>
+
+        <!-- Main Admission Button (Guaranteed Click) -->
+        <button type="button" onclick="openAdmissionModal()" class="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-black text-xs sm:text-sm px-5 py-2.5 rounded-xl transition shadow-md hover:shadow-lg hover:-translate-y-0.5 cursor-pointer">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Admission Open</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= HERO SECTION ================= -->
+  <section class="hero-gradient text-white py-16 sm:py-24 px-4 text-center relative overflow-hidden">
+    <div class="max-w-4xl mx-auto relative z-10">
+      
+      <div class="inline-flex items-center gap-2 bg-white/10 text-yellow-300 font-bold text-xs uppercase tracking-widest px-4 py-1.5 rounded-full mb-6 border border-white/15 backdrop-blur-md">
+        <i class="fa-solid fa-star text-yellow-400"></i> Academic Session 2026-27
+      </div>
+
+      <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-tight mb-4">
+        Better Education, <br class="hidden sm:block">
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-400">Brighter Future</span>
+      </h1>
+
+      <p class="text-base sm:text-xl text-blue-100/90 max-w-2xl mx-auto mb-8 font-medium leading-relaxed">
+        Learn Today | Build Tomorrow <br>
+        <span class="bg-blue-950/60 text-white font-bold px-3 py-1 rounded-lg text-sm border border-white/10 mt-2 inline-block">Specialized Coaching for Classes Nursery to 8th</span>
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <!-- Big Hero Apply Button -->
+        <button type="button" onclick="openAdmissionModal()" class="inline-flex items-center gap-3 bg-yellow-400 hover:bg-yellow-500 text-blue-950 text-base font-extrabold px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition active:scale-95 cursor-pointer">
+          <i class="fa-solid fa-file-pen text-xl"></i>
+          <span>Apply For Admission Now</span>
+        </button>
+        <a href="#tracking-section" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold text-base px-7 py-4 rounded-2xl border border-white/20 transition backdrop-blur-sm">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>Check Status</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= 4-STEP LIVE TRACKING PORTAL ================= -->
+  <section id="tracking-section" class="py-16 px-4 bg-slate-100 border-b border-slate-200">
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200/80">
+      
+      <div class="text-center mb-8">
+        <span class="text-xs font-black uppercase text-blue-700 bg-blue-50 px-3.5 py-1 rounded-full border border-blue-100">Live Status Portal</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-2">Admission Tracking & Verification</h2>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">Enter your Tracking ID to monitor registration, fee payment, and final approval</p>
+      </div>
+
+      <!-- Tracking Search Box -->
+      <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto mb-8">
+        <div class="relative flex-1">
+          <i class="fa-solid fa-hashtag absolute left-4 top-3.5 text-slate-400"></i>
+          <input type="text" id="trackInput" placeholder="Enter Tracking ID (e.g. FTC-2026-1001)" class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-600 focus:outline-none uppercase font-bold text-sm tracking-wider bg-slate-50" />
+        </div>
+        <button type="button" onclick="trackApplication()" class="bg-blue-950 hover:bg-blue-900 text-white font-black px-6 py-3 rounded-2xl transition shadow flex items-center justify-center gap-2 text-sm cursor-pointer">
+          <i class="fa-solid fa-magnifying-glass"></i> Track Status
+        </button>
+      </div>
+
+      <!-- Live Tracking Results -->
+      <div id="trackResultContainer" style="display: none;" class="border-t border-slate-100 pt-6">
+        
+        <!-- Applicant Header Card -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50 p-5 rounded-2xl mb-6 border border-slate-200 gap-3">
+          <div>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Applicant Details</span>
+            <h4 id="trackCandidateName" class="text-xl font-black text-slate-900 leading-tight">-</h4>
+            <p id="trackMetaDetails" class="text-xs text-slate-600 mt-1 font-medium">-</p>
+          </div>
+          <div class="text-left sm:text-right">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Tracking ID</span>
+            <span id="trackIdBadge" class="inline-block bg-blue-950 text-yellow-400 font-mono font-black px-3.5 py-1.5 rounded-xl text-sm mt-0.5">-</span>
+          </div>
+        </div>
+
+        <!-- Document Downloads Action Row -->
+        <div class="flex flex-wrap items-center gap-3 p-4 bg-blue-50/60 rounded-2xl border border-blue-100 mb-6">
+          <span class="text-xs font-bold text-blue-950 flex items-center gap-1.5 mr-auto">
+            <i class="fa-solid fa-file-arrow-down text-blue-700 text-sm"></i> Official Documents:
+          </span>
+          <button type="button" onclick="downloadCurrentSlipPdf()" class="bg-white hover:bg-slate-100 text-blue-950 font-bold px-4 py-2 rounded-xl border border-slate-300 text-xs transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-download text-blue-700"></i> Download Registration Slip (PDF)
+          </button>
+          <button type="button" id="finalFormBtnTop" onclick="downloadCurrentFinalPdf()" style="display: none;" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-stamp"></i> Download Final Admission Letter
+          </button>
+        </div>
+
+        <!-- Rejected Alert Box with Edit/Resubmit Option -->
+        <div id="rejectionAlertBox" style="display: none;" class="bg-rose-50 border-2 border-rose-300 rounded-2xl p-5 mb-6">
+          <div class="flex items-start gap-3">
+            <div class="text-rose-600 text-2xl mt-0.5"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div class="flex-1">
+              <h4 class="font-black text-rose-950 text-base">Application Requires Correction (Rejected by Faculty)</h4>
+              <p class="text-xs text-rose-800 mt-1 font-semibold">Teacher's Remark: <span id="rejectionReasonText" class="font-bold underline">-</span></p>
+              <p class="text-xs text-slate-600 mt-1">Please modify the incorrect fields and resubmit. No extra fee required.</p>
+              <button type="button" onclick="triggerEditAndResubmit()" class="mt-3 bg-rose-600 hover:bg-rose-700 text-white font-black px-5 py-2.5 rounded-xl text-xs transition shadow flex items-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-pen-to-square"></i> Edit & Resubmit Application
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Step Progress Indicators -->
+        <div id="fourStepsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div id="stepCard1" class="p-4 rounded-2xl border-2 transition text-center bg-white">
+            <div id="stepIcon1" class="w-10 h-10 mx-auto rounded-full flex items-center justify-center font-bold mb-2 text-sm">1</div>
+            <h5 class="font-bold text-xs uppercase tracking-wide">1. Registration & Fee</h5>
+            <p id="stepStatus1" class="text-xs font-semibold mt-1">Pending</p>
+          </div>
+          <div id="stepCard2" class="p-4 rounded-2xl border-2 transition text-center bg-white">
+            <div id="stepIcon2" class="w-10 h-10 mx-auto rounded-full flex items-center justify-center font-bold mb-2 text-sm">2</div>
+            <h5 class="font-bold text-xs uppercase tracking-wide">2. Document Check</h5>
+            <p id="stepStatus2" class="text-xs font-semibold mt-1">Pending</p>
+          </div>
+          <div id="stepCard3" class="p-4 rounded-2xl border-2 transition text-center bg-white">
+            <div id="stepIcon3" class="w-10 h-10 mx-auto rounded-full flex items-center justify-center font-bold mb-2 text-sm">3</div>
+            <h5 class="font-bold text-xs uppercase tracking-wide">3. Teacher Review</h5>
+            <p id="stepStatus3" class="text-xs font-semibold mt-1">Pending</p>
+            <span id="stepReviewerTag" class="text-[10px] text-purple-700 font-bold block mt-0.5"></span>
+          </div>
+          <div id="stepCard4" class="p-4 rounded-2xl border-2 transition text-center bg-white">
+            <div id="stepIcon4" class="w-10 h-10 mx-auto rounded-full flex items-center justify-center font-bold mb-2 text-sm">4</div>
+            <h5 class="font-bold text-xs uppercase tracking-wide">4. Final Approval</h5>
+            <p id="stepStatus4" class="text-xs font-semibold mt-1">Pending</p>
+          </div>
+        </div>
+
+        <!-- Fully Approved Card with Stamp -->
+        <div id="approvedSuccessCard" style="display: none;" class="bg-emerald-50 border-2 border-emerald-300 p-6 rounded-3xl text-center">
+          <div class="stamp-badge mb-3 text-sm">
+            <i class="fa-solid fa-stamp"></i> OFFICIAL ADMISSION APPROVED
+          </div>
+          <h3 class="text-xl font-black text-emerald-950">Congratulations! Admission Form Confirmed</h3>
+          <p class="text-xs text-emerald-800 mt-1 mb-5" id="approvedByFacultyName">Verified and digitally sealed by Focus Tuition Centre faculty.</p>
+          
+          <button type="button" onclick="downloadCurrentFinalPdf()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-black px-7 py-3.5 rounded-2xl shadow-lg transition duration-200 inline-flex items-center gap-2 text-sm cursor-pointer">
+            <i class="fa-solid fa-file-circle-check text-lg"></i>
+            <span>Download Official Admission Letter (With Seal & Sign)</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-blue-950 text-white py-8 px-4 text-center">
+    <h3 class="text-lg font-black tracking-wide">FOCUS TUITION CENTRE</h3>
+    <p class="text-yellow-400 text-xs mt-1">Address: Chndghat Andharkoth | Nursery to Class 8 (JAC Board Level)</p>
+    <p class="text-slate-400 text-[11px] mt-3">&copy; 2026 Focus Tuition Centre. All rights reserved.</p>
+  </footer>
+
+  <!-- ================= MODAL 1: STUDENT ADMISSION MODAL (DIRECT FIXED DISPLAY) ================= -->
+  <div id="studentAdmissionModal" style="display: none;" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-6 sm:p-8 relative max-h-[92vh] overflow-y-auto border border-slate-200">
+      
+      <!-- Close Button -->
+      <button type="button" onclick="closeAdmissionModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 text-xl font-bold bg-slate-100 hover:bg-slate-200 w-9 h-9 rounded-full flex items-center justify-center transition cursor-pointer">
+        ✕
+      </button>
+
+      <!-- SECTION A: Admission Input Form -->
+      <div id="admissionInputSection" style="display: block;">
+        <div class="text-center mb-6 pr-6">
+          <span class="text-xs font-extrabold text-blue-700 uppercase tracking-wider bg-blue-50 px-3.5 py-1 rounded-full border border-blue-100">Step 1: Student Information</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1" id="formHeaderTitle">Online Admission Application</h2>
+          <p class="text-xs text-rose-600 font-bold mt-1">* All fields are strictly mandatory</p>
+        </div>
+
+        <form id="studentAdmissionForm" onsubmit="handleAdmissionSubmit(event)" class="space-y-4">
+          <input type="hidden" id="editApplicationId" value="" />
+
+          <!-- Student Name & Class -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Student Full Name *</label>
+              <input type="text" id="inputStudentName" required placeholder="Enter student's full name" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Class Seeking Admission *</label>
+              <select id="inputStudentClass" required class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white">
+                <option value="">-- Select Class --</option>
+                <option value="Nursery">Nursery</option>
+                <option value="LKG">LKG</option>
+                <option value="UKG">UKG</option>
+                <option value="Class 1">Class 1</option>
+                <option value="Class 2">Class 2</option>
+                <option value="Class 3">Class 3</option>
+                <option value="Class 4">Class 4</option>
+                <option value="Class 5">Class 5</option>
+                <option value="Class 6">Class 6</option>
+                <option value="Class 7">Class 7</option>
+                <option value="Class 8">Class 8</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Father Name & Occupation -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Father's Name *</label>
+              <input type="text" id="inputFatherName" required placeholder="Enter father's full name" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Father's Occupation *</label>
+              <select id="inputFatherOccupation" required class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white">
+                <option value="">-- Select Occupation --</option>
+                <option value="Farmer">Farmer</option>
+                <option value="Business / Trader">Business / Trader</option>
+                <option value="Government Service">Government Service</option>
+                <option value="Private Job">Private Job</option>
+                <option value="Daily Wage Worker">Daily Wage Worker</option>
+                <option value="Self Employed">Self Employed</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Mobile & Guardian -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Mobile / WhatsApp Number *</label>
+              <input type="tel" id="inputMobileNumber" pattern="[0-9]{10}" required placeholder="10-digit mobile number" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Guardian's Name *</label>
+              <input type="text" id="inputGuardianName" required placeholder="Enter guardian's name" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+            </div>
+          </div>
+
+          <!-- State & District -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">State *</label>
+              <select id="inputStateSelect" required onchange="renderDistrictOptions()" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white">
+                <option value="">-- Select State --</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Bihar">Bihar</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">District *</label>
+              <select id="inputDistrictSelect" required class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white">
+                <option value="">-- Select State First --</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Village / Landmark / Full Address *</label>
+            <input type="text" id="inputFullAddress" required placeholder="e.g. Chndghat, Andharkoth or nearby location" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-3">
+            <button type="submit" id="submitFormButton" class="w-full bg-blue-950 hover:bg-blue-900 text-white font-black py-4 px-6 rounded-2xl transition shadow-xl flex justify-center items-center gap-2 text-base cursor-pointer">
+              <i class="fa-solid fa-arrow-right text-yellow-400"></i>
+              <span id="submitFormButtonText">Proceed to Registration Fee Payment</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- SECTION B: Pay Now & Coupon Code Screen -->
+      <div id="admissionPaymentSection" style="display: none;" class="text-center py-4">
+        <span class="text-xs font-extrabold text-emerald-700 uppercase tracking-wider bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200">Step 2: Payment or Coupon</span>
+        <h3 class="text-2xl font-black text-slate-900 mt-2">Registration Fee & Discount</h3>
+        <p class="text-xs text-slate-500 mt-0.5">Pay online or apply a special waiver coupon code to make it completely FREE</p>
+
+        <!-- Application Number & Amount Card -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 my-5 flex justify-between items-center max-w-md mx-auto">
+          <div class="text-left">
+            <span class="text-[10px] uppercase font-bold text-slate-400">Generated Application No.</span>
+            <div id="paymentAppIdDisplay" class="font-mono font-black text-blue-950 text-base tracking-wider">-</div>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] uppercase font-bold text-slate-400">Payable Amount</span>
+            <div id="feeAmountDisplay" class="text-2xl font-black text-emerald-600">₹100</div>
+          </div>
+        </div>
+
+        <!-- COUPON CODE SECTION -->
+        <div class="max-w-md mx-auto bg-amber-50/80 border-2 border-amber-200 rounded-2xl p-4 mb-5 text-left">
+          <label class="block text-xs font-black text-amber-950 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+            <i class="fa-solid fa-ticket text-amber-600"></i> Have a Free Voucher / Coupon Code?
+          </label>
+          <div class="flex gap-2">
+            <input type="text" id="couponInput" placeholder="Enter coupon (e.g. FREE100)" class="flex-1 px-3.5 py-2 text-xs uppercase font-bold tracking-wider rounded-xl border border-amber-300 focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white" />
+            <button type="button" onclick="applyCouponCode()" class="bg-amber-500 hover:bg-amber-600 text-blue-950 font-black px-4 py-2 rounded-xl text-xs transition shadow-sm cursor-pointer">
+              Apply
+            </button>
+          </div>
+          <div id="couponMessage" style="display: none;" class="text-[11px] font-bold mt-2"></div>
+        </div>
+
+        <!-- Scan to Pay QR Code -->
+        <div id="qrPaymentContainer" style="display: block;" class="max-w-sm mx-auto bg-white border-2 border-dashed border-blue-300 rounded-2xl p-5 shadow-sm mb-4">
+          <p class="text-xs font-bold text-slate-700 mb-3 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-qrcode text-blue-700"></i> Scan QR to Pay via GooglePay / PhonePe / Paytm
+          </p>
+          <div class="w-44 h-44 mx-auto bg-slate-100 rounded-xl flex items-center justify-center p-2 border border-slate-200 shadow-inner">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=ehtesab@upi&pn=FocusTuitionCentre&am=100&cu=INR" alt="Payment QR Code" class="w-full h-full object-contain rounded-lg" />
+          </div>
+          <p class="text-[10px] text-slate-400 font-mono mt-2 font-semibold">UPI ID: ehtesab@upi (Focus Tuition)</p>
+        </div>
+
+        <!-- Paid via UPI Verification Form -->
+        <form id="paymentVerifyForm" onsubmit="handlePaymentVerification(event)" class="max-w-md mx-auto space-y-3 text-left">
+          <div id="utrInputFieldContainer" style="display: block;">
+            <label class="block text-xs font-bold text-slate-700 mb-1">UPI Transaction ID / UTR Number (12 Digits) *</label>
+            <input type="text" id="inputUpiTxnId" placeholder="Enter 12-digit UTR from GPay/PhonePe" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none uppercase font-mono" />
+          </div>
+
+          <button type="submit" id="payNowSubmitBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 px-6 rounded-xl transition text-sm shadow-md flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-lock"></i>
+            <span id="payNowBtnText">Pay ₹100 & Download Registration Slip</span>
+          </button>
+        </form>
+
+        <div id="cashOptionContainer" style="display: block;">
+          <button type="button" onclick="handlePayLaterOrCash()" class="mt-3 text-xs font-bold text-slate-500 hover:text-slate-800 underline cursor-pointer">
+            Pay via Cash at Centre (Download Slip Directly)
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION C: Success & PDF Download Screen -->
+      <div id="admissionSuccessSection" style="display: none;" class="text-center py-6">
+        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3 shadow">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3 class="text-2xl font-black text-slate-900" id="successHeading">Registration & Clearance Complete!</h3>
+        <p class="text-xs text-slate-500 mt-1">Your official registration document is downloading automatically...</p>
+
+        <div class="bg-emerald-50 border-2 border-dashed border-emerald-400 p-5 rounded-2xl max-w-md mx-auto my-6">
+          <span class="stamp-badge text-xs mb-2" id="successStampText">₹100 PAID & PROVISIONALLY ADMITTED</span>
+          <p class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1 mt-2">Official Application / Tracking ID</p>
+          <div id="generatedTrackingIdDisplay" class="text-3xl font-mono font-black text-blue-950 tracking-wider">FTC-2026-0000</div>
+          <p class="text-[11px] text-slate-500 mt-2">Keep this ID safe to track your verification & final admission status.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-3">
+          <button type="button" onclick="downloadCurrentSlipPdf()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow cursor-pointer">
+            <i class="fa-solid fa-download"></i> Re-download Slip (PDF)
+          </button>
+          <button type="button" onclick="jumpToTrackingWithCurrentId()" class="bg-blue-950 hover:bg-blue-900 text-white font-bold py-3 px-6 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow cursor-pointer">
+            <i class="fa-solid fa-compass"></i> Go to Tracking Portal
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL 2: TEACHER AUTH & DESK MODAL ================= -->
+  <div id="teacherAuthModal" style="display: none;" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl p-6 sm:p-8 relative max-h-[92vh] overflow-y-auto border border-slate-200">
+      
+      <!-- Close Button -->
+      <button type="button" onclick="closeTeacherModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 text-xl font-bold bg-slate-100 hover:bg-slate-200 w-9 h-9 rounded-full flex items-center justify-center transition cursor-pointer">
+        ✕
+      </button>
+
+      <!-- Faculty Login Box -->
+      <div id="teacherLoginBox" style="display: block;" class="max-w-md mx-auto py-8">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-purple-100 text-purple-900 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3 shadow border border-purple-200">
+            <i class="fa-solid fa-user-lock"></i>
+          </div>
+          <h3 class="text-2xl font-black text-slate-900">Teacher Portal Login</h3>
+          <p class="text-xs text-slate-500 mt-1">Focus Tuition Centre - Authorized Faculty Access</p>
+        </div>
+
+        <form id="teacherLoginForm" onsubmit="handleTeacherLogin(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Faculty Username *</label>
+            <input type="text" id="teacherUserInput" required placeholder="tarique / abdullah / ehtesab" class="w-full px-4 py-3 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-purple-600 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Password *</label>
+            <input type="password" id="teacherPassInput" required placeholder="••••••••" class="w-full px-4 py-3 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-purple-600 focus:outline-none" />
+          </div>
+
+          <div id="loginAuthError" style="display: none;" class="text-xs text-rose-600 font-bold bg-rose-50 p-2.5 rounded-xl border border-rose-200 text-center">
+            Invalid Faculty Username or Password!
+          </div>
+
+          <button type="submit" class="w-full bg-purple-800 hover:bg-purple-900 text-white font-black py-3.5 px-6 rounded-xl transition text-sm shadow-md cursor-pointer">
+            Sign In to Teacher Desk
+          </button>
+        </form>
+
+        <div class="mt-6 p-3.5 bg-slate-100 rounded-2xl text-[11px] text-slate-600 text-center border border-slate-200">
+          🔑 <b>Authorized Credentials:</b> <br>
+          Username: <span class="font-mono font-bold text-purple-900">tarique</span> / <span class="font-mono font-bold text-purple-900">abdullah</span> / <span class="font-mono font-bold text-purple-900">ehtesab</span> <br> Password: <span class="font-mono font-bold text-purple-900">focus123</span>
+        </div>
+      </div>
+
+      <!-- Faculty Dashboard Table -->
+      <div id="teacherDashboardBox" style="display: none;">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200 pb-4 mb-6 gap-3">
+          <div>
+            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full uppercase border border-emerald-200">Authorized Session</span>
+            <h3 class="text-2xl font-black text-slate-900 mt-1">Admission Review & Approval Desk</h3>
+            <p class="text-xs text-slate-500">Active Evaluator: <b id="activeTeacherDisplayName" class="text-purple-900 font-bold">-</b></p>
+          </div>
+          <button type="button" onclick="handleTeacherLogout()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold px-4 py-2 rounded-xl text-xs transition border border-rose-200 flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+          </button>
+        </div>
+
+        <div class="overflow-x-auto rounded-2xl border border-slate-200">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 font-bold uppercase tracking-wider">
+                <th class="p-3.5">ID / Date</th>
+                <th class="p-3.5">Student Name</th>
+                <th class="p-3.5">Class</th>
+                <th class="p-3.5">Payment / Coupon</th>
+                <th class="p-3.5">Status</th>
+                <th class="p-3.5 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="teacherTableRows" class="divide-y divide-slate-100">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+        <p id="noTeacherAppsNotice" class="text-center text-slate-400 py-8 text-xs">No pending applications found.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= 1. HIDDEN PDF TEMPLATE: ROUND 1 REGISTRATION SLIP ================= -->
+  <div id="slipTemplate" style="width: 750px; padding: 25px; background: #ffffff; color: #1e293b; font-family: 'Plus Jakarta Sans', sans-serif; border: 3px solid #071f43;">
+    <div style="border-bottom: 2px solid #071f43; padding-bottom: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h1 style="font-size: 24px; font-weight: 800; color: #071f43; margin: 0;">FOCUS TUITION CENTRE</h1>
+        <p style="font-size: 12px; color: #d97706; font-weight: 700; margin: 2px 0;">Better Education, Brighter Future | JAC Board Level</p>
+        <p style="font-size: 10px; color: #475569; margin: 0;">Address: Chndghat Andharkoth | Nursery to Class 8th</p>
+      </div>
+      <div style="text-align: right; border: 1px dashed #15803d; padding: 6px 10px; border-radius: 6px; background: #f0fdf4;">
+        <span style="font-size: 9px; text-transform: uppercase; color: #166534; font-weight: bold;">FEE STATUS</span><br>
+        <strong style="font-size: 11px; color: #15803d;" id="slipPdfFeeStatus">PAID (ONLINE)</strong>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 14px;">
+      <span style="background: #071f43; color: #fff; padding: 4px 16px; font-size: 11px; font-weight: 700; border-radius: 20px;">
+        OFFICIAL REGISTRATION ACKNOWLEDGEMENT (2026-27)
+      </span>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 16px;">
+      <tr>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold; width: 25%;">Tracking ID:</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 800; color: #1d4ed8; font-size: 13px;" id="slipPdfId">-</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold; width: 20%;">Date:</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1;" id="slipPdfDate">-</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Student Name:</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 700;" id="slipPdfName">-</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Class Seeking:</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 700;" id="slipPdfClass">-</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Father's Name:</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1;" id="slipPdfFather">-</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Occupation:</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1;" id="slipPdfOccupation">-</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Mobile No:</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1;" id="slipPdfMobile">-</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">State & District:</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1;" id="slipPdfLocation">-</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Payment / Voucher Ref:</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-family: monospace; font-weight: bold;" id="slipPdfTxn">-</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Net Fee Paid:</td>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: bold; color: #166534;" id="slipPdfAmount">₹100</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Full Address:</td>
+        <td colspan="3" style="padding: 6px 8px; border: 1px solid #cbd5e1;" id="slipPdfAddress">-</td>
+      </tr>
+    </table>
+
+    <div style="background: #f8fafc; border-left: 3px solid #071f43; padding: 8px 12px; font-size: 10px; margin-bottom: 20px;">
+      <p style="margin: 0 0 2px 0; font-weight: bold; color: #071f43;">Notice:</p>
+      <p style="margin: 0; color: #64748b;">Registration fee clearance confirmed. The final official admission letter with authorised seal & faculty signature will be unlocked once faculty reviews the application.</p>
+    </div>
+  </div>
+
+  <!-- ================= 2. HIDDEN PDF TEMPLATE: ROUND 2 OFFICIAL ADMISSION FORM ================= -->
+  <div id="finalAdmissionTemplate" style="width: 750px; padding: 25px; background: #ffffff; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; border: 4px solid #071f43; position: relative;">
+    
+    <div style="border-bottom: 3px double #071f43; padding-bottom: 12px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h1 style="font-size: 26px; font-weight: 900; color: #071f43; margin: 0;">FOCUS TUITION CENTRE</h1>
+        <p style="font-size: 12px; color: #b45309; font-weight: 700; margin: 2px 0;">Better Education, Brighter Future | JAC Board Level</p>
+        <p style="font-size: 10px; color: #475569; margin: 0;">Centre: Chndghat Andharkoth | Nursery to Class 8</p>
+      </div>
+      <div style="text-align: right;">
+        <div class="stamp-badge" style="font-size: 11px; padding: 4px 12px;">
+          ✓ ADMISSION APPROVED
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 16px;">
+      <span style="background: #15803d; color: #fff; padding: 5px 22px; font-size: 12px; font-weight: 800; border-radius: 20px; text-transform: uppercase;">
+        OFFICIAL ADMISSION CONFIRMATION LETTER (SESSION 2026-27)
+      </span>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px;">
+      <tr>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold; width: 25%;">Admission Roll/ID:</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; font-weight: 800; color: #071f43; font-size: 13px;" id="finalPdfId">-</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold; width: 20%;">Approval Date:</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; font-weight: 700;" id="finalPdfDate">-</td>
+      </tr>
+      <tr>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Student Name:</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; font-weight: 800; font-size: 13px;" id="finalPdfName">-</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Admitted Class:</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; font-weight: 800; color: #b45309;" id="finalPdfClass">-</td>
+      </tr>
+      <tr>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Father's Name:</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1;" id="finalPdfFather">-</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Occupation:</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1;" id="finalPdfOccupation">-</td>
+      </tr>
+      <tr>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Contact No:</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1;" id="finalPdfMobile">-</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Location:</td>
+        <td style="padding: 7px; border: 1px solid #cbd5e1;" id="finalPdfLocation">-</td>
+      </tr>
+      <tr>
+        <td style="padding: 7px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold;">Full Residential Address:</td>
+        <td colspan="3" style="padding: 7px; border: 1px solid #cbd5e1;" id="finalPdfAddress">-</td>
+      </tr>
+    </table>
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 35px; padding: 0 15px;">
+      <div style="text-align: center; border: 2px dashed #071f43; padding: 8px 16px; border-radius: 50%; width: 110px; height: 110px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #eff6ff;">
+        <span style="font-size: 8px; font-weight: 800; color: #071f43;">FOCUS TUITION</span>
+        <i class="fa-solid fa-stamp" style="color: #15803d; font-size: 18px; margin: 2px 0;"></i>
+        <strong style="font-size: 9px; color: #15803d;">OFFICIAL SEAL</strong>
+        <span style="font-size: 7px; color: #64748b;">Chndghat</span>
+      </div>
+
+      <div style="text-align: center; min-width: 170px;">
+        <div style="font-family: 'Brush Script MT', cursive, sans-serif; font-size: 20px; color: #071f43; margin-bottom: 2px;" id="finalPdfTeacherSign">
+          Tarique Hasan
+        </div>
+        <div style="border-top: 1.5px solid #334155; padding-top: 4px;">
+          <strong style="font-size: 11px; color: #071f43; display: block;" id="finalPdfTeacherName">Tarique Hasan (Faculty)</strong>
+          <span style="font-size: 9px; color: #64748b;">Authorized Signatory</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    const stateDistricts = {
+      Jharkhand: ["Pakur", "Sahibganj", "Dumka", "Godda", "Deoghar", "Jamtara", "Ranchi", "Dhanbad", "Bokaro", "Giridih"],
+      Bihar: ["Katihar", "Purnia", "Bhagalpur", "Banka", "Patna", "Gaya"],
+      West Bengal: ["Murshidabad", "Malda", "Birbhum", "Kolkata"],
+      Other: ["Other District"]
+    };
+
+    function renderDistrictOptions(selectedDist = null) {
+      const state = document.getElementById("inputStateSelect").value;
+      const distSelect = document.getElementById("inputDistrictSelect");
+      distSelect.innerHTML = '<option value="">-- Select District * --</option>';
+
+      if (state && stateDistricts[state]) {
+        stateDistricts[state].forEach(d => {
+          const opt = document.createElement("option");
+          opt.value = d;
+          opt.textContent = d;
+          if (selectedDist && d === selectedDist) opt.selected = true;
+          distSelect.appendChild(opt);
+        });
+      }
+    }
+
+    const teacherCredentials = {
+      tarique: { pass: "focus123", name: "Tarique Hasan" },
+      abdullah: { pass: "focus123", name: "Abdullah" },
+      ehtesab: { pass: "focus123", name: "Ehtesab" }
+    };
+
+    const validFreeCoupons = ["FREE100", "FOCUSFREE", "EHTESAB100"];
+
+    let loggedInFaculty = null;
+    let activeApplicationData = null;
+    let isCouponFreeApplied = false;
+
+    function getStoredApps() {
+      try {
+        return JSON.parse(localStorage.getItem("focus_tuition_db") || "[]");
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveApps(apps) {
+      localStorage.setItem("focus_tuition_db", JSON.stringify(apps));
+    }
+
+    // Faculty Login
+    function handleTeacherLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById("teacherUserInput").value.trim().toLowerCase();
+      const pass = document.getElementById("teacherPassInput").value.trim();
+
+      if (teacherCredentials[user] && teacherCredentials[user].pass === pass) {
+        loggedInFaculty = teacherCredentials[user].name;
+        document.getElementById("loginAuthError").style.display = "none";
+        document.getElementById("activeTeacherDisplayName").innerText = loggedInFaculty;
+
+        document.getElementById("teacherLoginBox").style.display = "none";
+        document.getElementById("teacherDashboardBox").style.display = "block";
+        renderTeacherWorkspace();
+      } else {
+        document.getElementById("loginAuthError").style.display = "block";
+      }
+    }
+
+    function handleTeacherLogout() {
+      loggedInFaculty = null;
+      document.getElementById("teacherLoginForm").reset();
+      document.getElementById("teacherLoginBox").style.display = "block";
+      document.getElementById("teacherDashboardBox").style.display = "none";
+    }
+
+    // Admission Submit
+    function handleAdmissionSubmit(e) {
+      e.preventDefault();
+      const editId = document.getElementById("editApplicationId").value;
+      const today = new Date().toLocaleDateString('en-GB');
+      const apps = getStoredApps();
+
+      let targetApp;
+
+      if (editId) {
+        targetApp = apps.find(a => a.id === editId);
+        if (targetApp) {
+          targetApp.name = document.getElementById("inputStudentName").value;
+          targetApp.className = document.getElementById("inputStudentClass").value;
+          targetApp.fatherName = document.getElementById("inputFatherName").value;
+          targetApp.occupation = document.getElementById("inputFatherOccupation").value;
+          targetApp.mobile = document.getElementById("inputMobileNumber").value;
+          targetApp.guardian = document.getElementById("inputGuardianName").value;
+          targetApp.state = document.getElementById("inputStateSelect").value;
+          targetApp.district = document.getElementById("inputDistrictSelect").value;
+          targetApp.address = document.getElementById("inputFullAddress").value;
+          targetApp.isRejected = false;
+          targetApp.rejectReason = "";
+          targetApp.statusStep = 1;
+        }
+        saveApps(apps);
+        activeApplicationData = targetApp;
+        finishToSuccessScreen(targetApp);
+      } else {
+        const uniqueId = "FTC-2026-" + Math.floor(1000 + Math.random() * 9000);
+        targetApp = {
+          id: uniqueId,
+          date: today,
+          name: document.getElementById("inputStudentName").value,
+          className: document.getElementById("inputStudentClass").value,
+          fatherName: document.getElementById("inputFatherName").value,
+          occupation: document.getElementById("inputFatherOccupation").value,
+          mobile: document.getElementById("inputMobileNumber").value,
+          guardian: document.getElementById("inputGuardianName").value,
+          state: document.getElementById("inputStateSelect").value,
+          district: document.getElementById("inputDistrictSelect").value,
+          address: document.getElementById("inputFullAddress").value,
+          statusStep: 1,
+          isRejected: false,
+          rejectReason: "",
+          paymentStatus: "Pending",
+          transactionId: "",
+          feeAmount: "₹100",
+          facultyApproved: ""
+        };
+        apps.push(targetApp);
+        saveApps(apps);
+        activeApplicationData = targetApp;
+
+        document.getElementById("admissionInputSection").style.display = "none";
+        document.getElementById("paymentAppIdDisplay").innerText = targetApp.id;
+        document.getElementById("admissionPaymentSection").style.display = "block";
+      }
+    }
+
+    // Coupon Code
+    function applyCouponCode() {
+      const code = document.getElementById("couponInput").value.trim().toUpperCase();
+      const msg = document.getElementById("couponMessage");
+
+      if (!code) {
+        msg.className = "text-[11px] font-bold mt-2 text-rose-600 block";
+        msg.innerText = "Please enter a coupon code!";
+        msg.style.display = "block";
+        return;
+      }
+
+      if (validFreeCoupons.includes(code)) {
+        isCouponFreeApplied = true;
+        msg.className = "text-[11px] font-bold mt-2 text-emerald-700 block";
+        msg.innerHTML = `🎉 Coupon Applied: 100% Free Admission Granted! Code: <b>${code}</b>`;
+        msg.style.display = "block";
+
+        document.getElementById("feeAmountDisplay").innerHTML = "<span class='line-through text-slate-400 text-base mr-1'>₹100</span> ₹0 (FREE)";
+        document.getElementById("qrPaymentContainer").style.display = "none";
+        document.getElementById("utrInputFieldContainer").style.display = "none";
+        document.getElementById("cashOptionContainer").style.display = "none";
+
+        document.getElementById("payNowBtnText").innerText = "Claim Free Admission & Download Slip";
+        document.getElementById("inputUpiTxnId").removeAttribute("required");
+      } else {
+        isCouponFreeApplied = false;
+        msg.className = "text-[11px] font-bold mt-2 text-rose-600 block";
+        msg.innerText = "Invalid or expired coupon code!";
+        msg.style.display = "block";
+      }
+    }
+
+    // Payment Verification
+    function handlePaymentVerification(e) {
+      e.preventDefault();
+      if (!activeApplicationData) return;
+
+      const apps = getStoredApps();
+      const targetApp = apps.find(a => a.id === activeApplicationData.id);
+
+      if (isCouponFreeApplied) {
+        const appliedCode = document.getElementById("couponInput").value.trim().toUpperCase() || "FREE100";
+        if (targetApp) {
+          targetApp.paymentStatus = `100% Free (Coupon: ${appliedCode})`;
+          targetApp.transactionId = `COUPON-${appliedCode}`;
+          targetApp.feeAmount = "₹0 (Free)";
+          saveApps(apps);
+          activeApplicationData = targetApp;
+        }
+      } else {
+        const utr = document.getElementById("inputUpiTxnId").value.trim();
+        if (!utr) {
+          alert("Please enter the 12-digit UPI UTR number or use a Free Coupon Code!");
+          return;
+        }
+        if (targetApp) {
+          targetApp.paymentStatus = "Paid (₹100 Online)";
+          targetApp.transactionId = utr;
+          targetApp.feeAmount = "₹100";
+          saveApps(apps);
+          activeApplicationData = targetApp;
+        }
+      }
+
+      finishToSuccessScreen(activeApplicationData);
+    }
+
+    function handlePayLaterOrCash() {
+      if (!activeApplicationData) return;
+
+      const apps = getStoredApps();
+      const targetApp = apps.find(a => a.id === activeApplicationData.id);
+
+      if (targetApp) {
+        targetApp.paymentStatus = "Due at Centre";
+        targetApp.transactionId = "CASH-ON-CENTRE";
+        targetApp.feeAmount = "₹100 (Due)";
+        saveApps(apps);
+        activeApplicationData = targetApp;
+      }
+
+      finishToSuccessScreen(activeApplicationData);
+    }
+
+    function finishToSuccessScreen(app) {
+      document.getElementById("admissionPaymentSection").style.display = "none";
+      document.getElementById("admissionInputSection").style.display = "none";
+      document.getElementById("generatedTrackingIdDisplay").innerText = app.id;
+
+      if (isCouponFreeApplied) {
+        document.getElementById("successHeading").innerText = "100% Free Admission Granted!";
+        document.getElementById("successStampText").innerText = "FREE SCHOLARSHIP ADMISSION (COUPON VERIFIED)";
+      } else {
+        document.getElementById("successHeading").innerText = "Payment & Registration Complete!";
+        document.getElementById("successStampText").innerText = "₹100 PAID & PROVISIONALLY ADMITTED";
+      }
+
+      document.getElementById("admissionSuccessSection").style.display = "block";
+
+      fillSlipTemplate(app);
+      downloadCurrentSlipPdf();
+
+      if (loggedInFaculty) renderTeacherWorkspace();
+    }
+
+    function fillSlipTemplate(app) {
+      document.getElementById("slipPdfId").innerText = app.id;
+      document.getElementById("slipPdfDate").innerText = app.date;
+      document.getElementById("slipPdfName").innerText = app.name;
+      document.getElementById("slipPdfClass").innerText = app.className;
+      document.getElementById("slipPdfFather").innerText = app.fatherName;
+      document.getElementById("slipPdfOccupation").innerText = app.occupation;
+      document.getElementById("slipPdfMobile").innerText = app.mobile;
+      document.getElementById("slipPdfLocation").innerText = `${app.district}, ${app.state}`;
+      document.getElementById("slipPdfAddress").innerText = app.address;
+      document.getElementById("slipPdfTxn").innerText = app.transactionId || "ONLINE-VERIFIED";
+      document.getElementById("slipPdfFeeStatus").innerText = app.paymentStatus || "PAID";
+      document.getElementById("slipPdfAmount").innerText = app.feeAmount || "₹100";
+    }
+
+    function downloadCurrentSlipPdf() {
+      if (!activeApplicationData) return;
+      fillSlipTemplate(activeApplicationData);
+
+      const el = document.getElementById("slipTemplate");
+      el.style.display = "block";
+
+      html2pdf().set({
+        margin: 0.3,
+        filename: `Registration_Slip_${activeApplicationData.id}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      }).from(el).save().then(() => {
+        el.style.display = "none";
+      });
+    }
+
+    function downloadCurrentFinalPdf() {
+      if (!activeApplicationData || activeApplicationData.statusStep !== 4) return;
+
+      document.getElementById("finalPdfId").innerText = activeApplicationData.id;
+      document.getElementById("finalPdfDate").innerText = new Date().toLocaleDateString('en-GB');
+      document.getElementById("finalPdfName").innerText = activeApplicationData.name;
+      document.getElementById("finalPdfClass").innerText = activeApplicationData.className;
+      document.getElementById("finalPdfFather").innerText = activeApplicationData.fatherName;
+      document.getElementById("finalPdfOccupation").innerText = activeApplicationData.occupation;
+      document.getElementById("finalPdfMobile").innerText = activeApplicationData.mobile;
+      document.getElementById("finalPdfLocation").innerText = `${activeApplicationData.district}, ${activeApplicationData.state}`;
+      document.getElementById("finalPdfAddress").innerText = activeApplicationData.address;
+
+      document.getElementById("finalPdfTeacherName").innerText = `${activeApplicationData.facultyApproved} (Faculty)`;
+      document.getElementById("finalPdfTeacherSign").innerText = activeApplicationData.facultyApproved;
+
+      const el = document.getElementById("finalAdmissionTemplate");
+      el.style.display = "block";
+
+      html2pdf().set({
+        margin: 0.3,
+        filename: `Official_Admission_${activeApplicationData.id}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      }).from(el).save().then(() => {
+        el.style.display = "none";
+      });
+    }
+
+    function jumpToTrackingWithCurrentId() {
+      if (!activeApplicationData) return;
+      closeAdmissionModal();
+      document.getElementById("trackInput").value = activeApplicationData.id;
+      window.location.href = "#tracking-section";
+      trackApplication();
+    }
+
+    function trackApplication() {
+      const search = document.getElementById("trackInput").value.trim().toUpperCase();
+      if (!search) {
+        alert("Please enter a Tracking ID!");
+        return;
+      }
+
+      const apps = getStoredApps();
+      const app = apps.find(a => a.id === search);
+
+      if (!app) {
+        alert("No application found with this ID! Please check again.");
+        return;
+      }
+
+      activeApplicationData = app;
+
+      document.getElementById("trackResultContainer").style.display = "block";
+      document.getElementById("trackCandidateName").innerText = app.name;
+      document.getElementById("trackMetaDetails").innerText = `Class: ${app.className} | Father: ${app.fatherName} | Fee: ${app.paymentStatus || 'Cleared'}`;
+      document.getElementById("trackIdBadge").innerText = app.id;
+
+      const rejBox = document.getElementById("rejectionAlertBox");
+      const grid = document.getElementById("fourStepsGrid");
+      const appCard = document.getElementById("approvedSuccessCard");
+      const topFinalBtn = document.getElementById("finalFormBtnTop");
+
+      if (app.isRejected) {
+        rejBox.style.display = "block";
+        document.getElementById("rejectionReasonText").innerText = app.rejectReason || "Discrepancy found in documents.";
+        grid.classList.add("opacity-40");
+        appCard.style.display = "none";
+        topFinalBtn.style.display = "none";
+      } else {
+        rejBox.style.display = "none";
+        grid.classList.remove("opacity-40");
+
+        updateStepVisuals(1, app.statusStep >= 1, "Completed");
+        updateStepVisuals(2, app.statusStep >= 2, app.statusStep > 2 ? "Verified" : (app.statusStep === 2 ? "In Progress" : "Pending"));
+        updateStepVisuals(3, app.statusStep >= 3, app.statusStep > 3 ? "Approved" : (app.statusStep === 3 ? "Under Review" : "Pending"));
+        updateStepVisuals(4, app.statusStep === 4, app.statusStep === 4 ? "Approved" : "Pending");
+
+        if (app.statusStep >= 3 && app.facultyApproved) {
+          document.getElementById("stepReviewerTag").innerText = `By: ${app.facultyApproved}`;
+        } else {
+          document.getElementById("stepReviewerTag").innerText = "";
+        }
+
+        if (app.statusStep === 4) {
+          appCard.style.display = "block";
+          topFinalBtn.style.display = "inline-flex";
+          document.getElementById("approvedByFacultyName").innerText = `Application certified and sanctioned by teacher ${app.facultyApproved}.`;
+        } else {
+          appCard.style.display = "none";
+          topFinalBtn.style.display = "none";
+        }
+      }
+
+      document.getElementById("trackResultContainer").scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function updateStepVisuals(stepNum, isDone, label) {
+      const card = document.getElementById(`stepCard${stepNum}`);
+      const icon = document.getElementById(`stepIcon${stepNum}`);
+      const status = document.getElementById(`stepStatus${stepNum}`);
+
+      status.innerText = label;
+
+      if (isDone) {
+        card.className = "p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-center text-emerald-950 transition";
+        icon.className = "w-10 h-10 mx-auto rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold mb-2 text-sm";
+        icon.innerHTML = "✓";
+      } else {
+        card.className = "p-4 rounded-2xl border-2 border-slate-200 bg-white text-center text-slate-500 opacity-60 transition";
+        icon.className = "w-10 h-10 mx-auto rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold mb-2 text-sm";
+        icon.innerHTML = stepNum;
+      }
+    }
+
+    function triggerEditAndResubmit() {
+      if (!activeApplicationData) return;
+
+      document.getElementById("editApplicationId").value = activeApplicationData.id;
+      document.getElementById("inputStudentName").value = activeApplicationData.name;
+      document.getElementById("inputStudentClass").value = activeApplicationData.className;
+      document.getElementById("inputFatherName").value = activeApplicationData.fatherName;
+      document.getElementById("inputFatherOccupation").value = activeApplicationData.occupation;
+      document.getElementById("inputMobileNumber").value = activeApplicationData.mobile;
+      document.getElementById("inputGuardianName").value = activeApplicationData.guardian;
+      document.getElementById("inputStateSelect").value = activeApplicationData.state;
+      renderDistrictOptions(activeApplicationData.district);
+      document.getElementById("inputFullAddress").value = activeApplicationData.address;
+
+      document.getElementById("formHeaderTitle").innerText = `Edit Application (${activeApplicationData.id})`;
+      document.getElementById("submitFormButtonText").innerText = "Resubmit Corrected Application";
+
+      document.getElementById("admissionInputSection").style.display = "block";
+      document.getElementById("admissionPaymentSection").style.display = "none";
+      document.getElementById("admissionSuccessSection").style.display = "none";
+
+      document.getElementById("studentAdmissionModal").style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+
+    // Teacher Desk Workspace Table
+    function renderTeacherWorkspace() {
+      const apps = getStoredApps();
+      const tbody = document.getElementById("teacherTableRows");
+      const noNotice = document.getElementById("noTeacherAppsNotice");
+
+      if (apps.length === 0) {
+        noNotice.style.display = "block";
+        tbody.innerHTML = "";
+        return;
+      }
+      noNotice.style.display = "none";
+      tbody.innerHTML = "";
+
+      apps.forEach(a => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition";
+
+        let statusText = "";
+        let actions = "";
+
+        if (a.isRejected) {
+          statusText = `<span class="bg-rose-100 text-rose-800 px-2 py-1 rounded font-bold text-[10px]">❌ Rejected</span>`;
+          actions = `<span class="text-slate-400 italic text-[11px]">Awaiting Resubmission</span>`;
+        } else if (a.statusStep === 1) {
+          statusText = `<span class="bg-blue-100 text-blue-900 px-2 py-1 rounded font-bold text-[10px]">1. Registered</span>`;
+          actions = `
+            <div class="flex items-center gap-1.5 justify-center">
+              <button type="button" onclick="advanceAppWorkflow('${a.id}', 2)" class="bg-blue-700 hover:bg-blue-800 text-white px-2.5 py-1 rounded-lg font-bold text-[11px] cursor-pointer">Verify Docs</button>
+              <button type="button" onclick="rejectAppWorkflow('${a.id}')" class="bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1 rounded-lg font-bold text-[11px] cursor-pointer">Reject</button>
+            </div>`;
+        } else if (a.statusStep === 2) {
+          statusText = `<span class="bg-amber-100 text-amber-900 px-2 py-1 rounded font-bold text-[10px]">2. Docs Verified</span>`;
+          actions = `
+            <div class="flex items-center gap-1.5 justify-center">
+              <button type="button" onclick="advanceAppWorkflow('${a.id}', 3)" class="bg-purple-700 hover:bg-purple-800 text-white px-2.5 py-1 rounded-lg font-bold text-[11px] cursor-pointer">Review</button>
+              <button type="button" onclick="rejectAppWorkflow('${a.id}')" class="bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1 rounded-lg font-bold text-[11px] cursor-pointer">Reject</button>
+            </div>`;
+        } else if (a.statusStep === 3) {
+          statusText = `<span class="bg-purple-100 text-purple-900 px-2 py-1 rounded font-bold text-[10px]">3. Under ${a.facultyApproved || loggedInFaculty}</span>`;
+          actions = `
+            <div class="flex items-center gap-1.5 justify-center">
+              <button type="button" onclick="advanceAppWorkflow('${a.id}', 4)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-lg font-bold text-[11px] shadow cursor-pointer">Final Approve</button>
+              <button type="button" onclick="rejectAppWorkflow('${a.id}')" class="bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1 rounded-lg font-bold text-[11px] cursor-pointer">Reject</button>
+            </div>`;
+        } else {
+          statusText = `<span class="bg-emerald-100 text-emerald-900 px-2 py-1 rounded font-black text-[10px]">✓ 4. Fully Approved</span>`;
+          actions = `<span class="text-emerald-700 font-bold text-[11px]"><i class="fa-solid fa-stamp"></i> By ${a.facultyApproved}</span>`;
+        }
+
+        tr.innerHTML = `
+          <td class="p-3.5 font-mono font-bold text-blue-950">${a.id}<br><span class="text-[10px] text-slate-400 font-sans">${a.date}</span></td>
+          <td class="p-3.5 font-bold">${a.name}</td>
+          <td class="p-3.5 font-medium">${a.className}</td>
+          <td class="p-3.5 font-semibold text-emerald-700">${a.paymentStatus || 'Cleared'}</td>
+          <td class="p-3.5">${statusText}</td>
+          <td class="p-3.5 text-center">${actions}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function advanceAppWorkflow(id, nextStep) {
+      const apps = getStoredApps();
+      const a = apps.find(x => x.id === id);
+      if (a && loggedInFaculty) {
+        a.statusStep = nextStep;
+        a.facultyApproved = loggedInFaculty;
+        saveApps(apps);
+        renderTeacherWorkspace();
+
+        const curSearch = document.getElementById("trackInput").value.trim().toUpperCase();
+        if (curSearch === id) trackApplication();
+      }
+    }
+
+    function rejectAppWorkflow(id) {
+      const reason = prompt("Enter Reason for Application Rejection:", "Discrepancy in documents / Incomplete details");
+      if (reason === null) return;
+
+      const apps = getStoredApps();
+      const a = apps.find(x => x.id === id);
+      if (a) {
+        a.isRejected = true;
+        a.rejectReason = reason || "Incomplete or inaccurate information.";
+        saveApps(apps);
+        renderTeacherWorkspace();
+
+        const curSearch = document.getElementById("trackInput").value.trim().toUpperCase();
+        if (curSearch === id) trackApplication();
+      }
+    }
+  </script>
+
+</body>
+</html>
