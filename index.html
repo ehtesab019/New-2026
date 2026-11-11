@@ -1,0 +1,1337 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHIP EXPRESS - Your Local Delivery Partner</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#0B1120',
+              slate: '#1E293B',
+              blue: '#2563EB',
+              orange: '#FF6B00',
+              orangeDark: '#EA580C',
+              surface: '#F8FAFC'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Sleek scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #printArea, #printArea * { visibility: visible; }
+      #printArea {
+        position: absolute; left: 0; top: 0; width: 100%;
+        margin: 0; padding: 16px; background: white; color: black;
+      }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-orange-500 selection:text-white">
+
+  <!-- ================= ULTRA-CLEAN NAVBAR ================= -->
+  <header class="bg-brand-navy border-b border-slate-800 text-white sticky top-0 z-40 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 bg-gradient-to-tr from-brand-orange to-amber-500 rounded-lg flex items-center justify-center shadow-md shadow-orange-500/20">
+          <i data-lucide="package" class="w-4 h-4 text-white"></i>
+        </div>
+        <div class="flex items-baseline space-x-1.5">
+          <span class="text-lg font-black tracking-wider text-white">SHIP<span class="text-brand-orange">EXPRESS</span></span>
+          <span class="hidden md:inline text-[11px] text-slate-400 font-medium">Your Local Delivery Partner</span>
+        </div>
+      </a>
+
+      <!-- Compact Action Controls -->
+      <div class="flex items-center space-x-2">
+        <a href="#quick-track" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white transition-colors">
+          <i data-lucide="search" class="w-3.5 h-3.5 text-orange-400"></i>
+          <span>Track</span>
+        </a>
+
+        <!-- Rider Portal Compact Button -->
+        <button onclick="openRiderAuthModal()" class="px-2.5 py-1.5 text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-emerald-400 hover:text-emerald-300 border border-slate-700/80 rounded-lg transition-all flex items-center gap-1.5 shadow-sm">
+          <i data-lucide="bike" class="w-3.5 h-3.5"></i>
+          <span class="hidden xs:inline">Rider</span><span>Portal</span>
+        </button>
+
+        <!-- Admin Portal Compact Button -->
+        <button onclick="openAdminAuthModal()" class="px-2.5 py-1.5 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+          <span class="hidden xs:inline">Admin</span><span>Panel</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= NOTIFICATION TOAST CONTAINER ================= -->
+  <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="flex-1">
+
+    <!-- HERO SECTION -->
+    <section class="bg-gradient-to-b from-brand-navy via-slate-900 to-slate-900 text-white pt-12 pb-14 px-4 sm:px-6 border-b border-slate-800">
+      <div class="max-w-4xl mx-auto text-center">
+        
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-semibold mb-4">
+          <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+          Fast Doorstep Pickup • Secure Handover OTP
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+          Local Courier & Cargo <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500">Delivered Across Town Fast</span>
+        </h1>
+
+        <p class="text-slate-300 text-xs sm:text-sm max-w-xl mx-auto mt-3">
+          On-demand delivery for documents, parcels, shop-to-shop wholesale, and heavy cargo via Bike, Toto, and Mini Trucks.
+        </p>
+
+        <!-- Main Action: ONLY Opens Form Popup When Clicked -->
+        <div class="mt-6 flex justify-center">
+          <button onclick="openBookingModal()" class="px-7 py-3 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white font-black text-sm shadow-lg shadow-orange-500/25 transition-all flex items-center gap-2 transform active:scale-95">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>Book a Delivery Now</span>
+          </button>
+        </div>
+
+        <!-- ULTRA CLEAN COMPACT TRACKING SEARCH BAR (NO DUMMY PAGE / NO CLUTTER) -->
+        <div id="quick-track" class="mt-8 max-w-lg mx-auto bg-slate-800/90 backdrop-blur-md p-1.5 rounded-2xl border border-slate-700 shadow-xl">
+          <div class="flex items-center gap-2">
+            <div class="relative flex-1">
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+              <input type="text" id="track-search-input" onkeydown="if(event.key==='Enter') executeTrack()" placeholder="Enter Tracking ID (e.g., SE202611110001)" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-9 pr-3 py-2 text-xs font-mono uppercase text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-orange-500">
+            </div>
+            <button onclick="executeTrack()" class="px-4 py-2 bg-gradient-to-r from-brand-orange to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
+              <span>Track</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Quick Test ID Pills -->
+          <div class="flex items-center justify-between px-2 pt-2 pb-0.5 text-[10px] text-slate-400">
+            <span class="font-medium">Quick Demo IDs:</span>
+            <div class="flex gap-1.5">
+              <button onclick="quickSelectTrack('SE202611110001')" class="font-mono text-orange-400 hover:underline">...0001 (In-Transit)</button>
+              <span>•</span>
+              <button onclick="quickSelectTrack('SE202611110002')" class="font-mono text-emerald-400 hover:underline">...0002 (Out For Del.)</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VEHICLES & SERVICES SECTION (COMPACT & MODERN) -->
+    <section class="py-12 bg-white border-b border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 pb-2 border-b border-slate-100 gap-2">
+          <div>
+            <span class="text-xs uppercase font-extrabold tracking-widest text-brand-orange">Fleet Capabilities</span>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">Delivery Vehicles & Capacity</h2>
+          </div>
+          <p class="text-xs text-slate-500 max-w-sm">From urgent documents to heavy bulk goods, we assign the right transport.</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:border-slate-300 transition-all">
+            <div class="w-9 h-9 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center mb-2.5">
+              <i data-lucide="bike" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 text-xs">Express Bike</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Documents & packets</p>
+            <div class="mt-3 pt-2 border-t border-slate-200/60 flex justify-between text-[11px] font-bold">
+              <span class="text-slate-600">Max 10 KG</span>
+              <span class="text-blue-600">2-Hr Express</span>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:border-slate-300 transition-all">
+            <div class="w-9 h-9 rounded-lg bg-orange-100 text-brand-orange flex items-center justify-center mb-2.5">
+              <i data-lucide="zap" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 text-xs">Toto / E-Rickshaw</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Local commercial bags</p>
+            <div class="mt-3 pt-2 border-t border-slate-200/60 flex justify-between text-[11px] font-bold">
+              <span class="text-slate-600">Max 40 KG</span>
+              <span class="text-brand-orange">Eco Friendly</span>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:border-slate-300 transition-all">
+            <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center mb-2.5">
+              <i data-lucide="truck" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 text-xs">Cargo 3-Wheeler</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Shop-to-shop heavy supply</p>
+            <div class="mt-3 pt-2 border-t border-slate-200/60 flex justify-between text-[11px] font-bold">
+              <span class="text-slate-600">Max 200 KG</span>
+              <span class="text-emerald-600">Trade Cargo</span>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:border-slate-300 transition-all">
+            <div class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mb-2.5">
+              <i data-lucide="container" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 text-xs">Mini Truck</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Large machinery & goods</p>
+            <div class="mt-3 pt-2 border-t border-slate-200/60 flex justify-between text-[11px] font-bold">
+              <span class="text-slate-600">Max 750 KG</span>
+              <span class="text-indigo-600">Heavy Freight</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 3 Feature Steps -->
+        <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-slate-100 text-center">
+          <div class="space-y-1">
+            <div class="w-7 h-7 rounded-full bg-slate-900 text-white font-mono text-xs flex items-center justify-center mx-auto">1</div>
+            <h4 class="font-bold text-xs text-slate-900">1. Instant Online Booking</h4>
+            <p class="text-[11px] text-slate-500">Calculate exact rate by weight and distance, get a unique Tracking ID.</p>
+          </div>
+          <div class="space-y-1">
+            <div class="w-7 h-7 rounded-full bg-slate-900 text-white font-mono text-xs flex items-center justify-center mx-auto">2</div>
+            <h4 class="font-bold text-xs text-slate-900">2. Real-Time Rider Dispatch</h4>
+            <p class="text-[11px] text-slate-500">Nearest rider picks up the parcel directly from the shop or house.</p>
+          </div>
+          <div class="space-y-1">
+            <div class="w-7 h-7 rounded-full bg-slate-900 text-white font-mono text-xs flex items-center justify-center mx-auto">3</div>
+            <h4 class="font-bold text-xs text-slate-900">3. Secure Doorstep OTP</h4>
+            <p class="text-[11px] text-slate-500">Receiver gets the 4-digit PIN only upon Out-for-Delivery. Safe handover.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= COMPACT FOOTER ================= -->
+  <footer class="bg-brand-navy border-t border-slate-800 text-slate-400 py-6 text-[11px]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <div class="flex items-center space-x-2">
+        <span class="font-bold text-white tracking-wider">SHIP<span class="text-brand-orange">EXPRESS</span></span>
+        <span>&copy; 2026. Local Logistics Network.</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="openBookingModal()" class="text-orange-400 hover:underline">Book Parcel</button>
+        <span>•</span>
+        <button onclick="openRiderAuthModal()" class="text-emerald-400 hover:underline">Rider Portal</button>
+        <span>•</span>
+        <button onclick="openAdminAuthModal()" class="text-blue-400 hover:underline">Admin Login</button>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ================= 1. MODAL: BOOKING POPUP (OPENS ONLY ON CLICK) ================= -->
+  <div id="modal-booking" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden my-4">
+      
+      <!-- Modal Header -->
+      <div class="bg-brand-navy p-4 text-white flex justify-between items-center border-b border-slate-800">
+        <div>
+          <span class="text-[10px] uppercase font-bold text-brand-orange tracking-wider">Consignment Booking</span>
+          <h2 class="text-base font-bold text-white">Book a Local Delivery</h2>
+        </div>
+        <button onclick="closeModal('modal-booking')" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Form Body -->
+      <form id="booking-form" onsubmit="handleBookingSubmit(event)" class="p-4 sm:p-5 space-y-4 max-h-[80vh] overflow-y-auto">
+        
+        <!-- Sender Box -->
+        <div>
+          <div class="text-[11px] font-bold uppercase text-slate-500 mb-2 flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px]">1</span>
+            <span>Sender (Pickup Details)</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Sender Name *</label>
+              <input type="text" id="bk-sender-name" required value="Amitabh Verma" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-blue-500">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Mobile *</label>
+              <input type="tel" id="bk-sender-phone" required value="9876543210" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-blue-500">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Locality / Bazar *</label>
+              <input type="text" id="bk-sender-locality" required value="Station Road Market" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-blue-500">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Pickup Shop / Address *</label>
+              <input type="text" id="bk-sender-address" required value="Shop #12, Near SBI Bank ATM" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-blue-500">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">PIN Code *</label>
+              <input type="text" id="bk-sender-pin" required value="816101" maxlength="6" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-blue-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- Receiver Box -->
+        <div class="pt-2 border-t border-slate-100">
+          <div class="text-[11px] font-bold uppercase text-slate-500 mb-2 flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded-full bg-brand-orange text-white flex items-center justify-center text-[9px]">2</span>
+            <span>Receiver (Delivery Destination)</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Receiver Name *</label>
+              <input type="text" id="bk-receiver-name" required value="Pooja Sen" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-orange-500">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Mobile *</label>
+              <input type="tel" id="bk-receiver-phone" required value="9123456789" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-orange-500">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Drop Locality *</label>
+              <input type="text" id="bk-receiver-locality" required value="Barharwa Road Colony" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-orange-500">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Drop Address *</label>
+              <input type="text" id="bk-receiver-address" required value="Quarter 44B, Near Forest Office" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-orange-500">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">PIN Code *</label>
+              <input type="text" id="bk-receiver-pin" required value="816102" maxlength="6" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-orange-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- Parcel Details & Real-Time Dynamic Pricing -->
+        <div class="pt-2 border-t border-slate-100">
+          <div class="text-[11px] font-bold uppercase text-slate-500 mb-2 flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px]">3</span>
+            <span>Parcel Attributes & Live Fare Calculation</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Weight (किलो) *</label>
+              <select id="bk-weight" onchange="updateBookingFareUI()" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white font-bold text-slate-900 focus:ring-1 focus:ring-emerald-500">
+                <option value="0.5">0.5 KG (Document/Small)</option>
+                <option value="1" selected>1.0 KG</option>
+                <option value="2">2.0 KG</option>
+                <option value="5">5.0 KG</option>
+                <option value="10">10.0 KG</option>
+                <option value="20">20.0 KG</option>
+                <option value="30">30.0 KG</option>
+                <option value="50">50.0 KG</option>
+                <option value="100">100.0 KG (Cargo Freight)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Distance (कि.मी.) *</label>
+              <input type="number" id="bk-distance" min="1" max="100" value="15" oninput="updateBookingFareUI()" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 font-mono font-bold focus:ring-1 focus:ring-emerald-500">
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Vehicle Type *</label>
+              <select id="bk-vehicle" onchange="updateBookingFareUI()" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white font-bold text-blue-700 focus:ring-1 focus:ring-emerald-500">
+                <option value="bike">Express Motorbike</option>
+                <option value="toto">E-Rickshaw / Toto</option>
+                <option value="cargo">Cargo 3-Wheeler</option>
+                <option value="truck">Mini Truck</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2.5">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Item Description *</label>
+              <input type="text" id="bk-desc" required value="Stationery and office papers" class="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-emerald-500">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Payment Method</label>
+              <div class="flex items-center gap-3 pt-1">
+                <label class="inline-flex items-center text-xs font-bold text-slate-800 cursor-pointer">
+                  <input type="radio" name="bk-payMethod" value="COD" checked class="text-orange-500 mr-1">
+                  <span>Cash on Delivery (COD)</span>
+                </label>
+                <label class="inline-flex items-center text-xs font-bold text-slate-800 cursor-pointer">
+                  <input type="radio" name="bk-payMethod" value="PREPAID" class="text-blue-500 mr-1">
+                  <span>Prepaid</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculated Price Summary & Action -->
+        <div class="bg-slate-900 text-white rounded-xl p-3.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-inner">
+          <div class="text-[11px] text-slate-300 space-y-0.5">
+            <div>Base: <span id="fare-base" class="font-mono text-white">₹50</span> • Wt: <span id="fare-wt" class="font-mono text-white">₹15</span> • Dist: <span id="fare-dist" class="font-mono text-white">₹15</span></div>
+            <div class="text-[10px] text-orange-400 font-medium">1kg @ 15km = ₹80 | 1kg @ 30km = ₹120</div>
+          </div>
+          <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <div class="text-right">
+              <span class="text-[9px] uppercase font-bold text-slate-400 block">Total Delivery Fare</span>
+              <span id="fare-total" class="text-xl font-black font-mono text-orange-400">₹80.00</span>
+            </div>
+            <button type="submit" class="px-5 py-2.5 bg-brand-orange hover:bg-brand-orangeDark text-white font-black text-xs rounded-lg shadow-md transition-all flex items-center gap-1.5">
+              <i data-lucide="check" class="w-3.5 h-3.5"></i>
+              <span>Confirm Booking</span>
+            </button>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- ================= 2. MODAL: SLEEK TRACKING MODAL (OPENS ONLY AFTER SEARCH) ================= -->
+  <div id="modal-tracking-result" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="bg-brand-navy p-4 text-white flex justify-between items-center border-b border-slate-800">
+        <div>
+          <span class="text-[10px] uppercase font-bold text-orange-400 tracking-wider">Consignment Tracker</span>
+          <h3 id="track-modal-title" class="text-sm font-bold text-white font-mono">SE202611110001</h3>
+        </div>
+        <button onclick="closeModal('modal-tracking-result')" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Tracking Card Body -->
+      <div id="track-modal-body" class="p-5 space-y-4">
+        <!-- Rendered dynamically by executeTrack() -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="bg-slate-50 px-5 py-3 border-t border-slate-200 flex justify-end">
+        <button onclick="closeModal('modal-tracking-result')" class="px-4 py-1.5 text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100">
+          Close Tracker
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ================= 3. MODAL: COMPACT ADMIN LOGIN GATE ================= -->
+  <div id="modal-admin-auth" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xs w-full shadow-2xl text-center space-y-4">
+      <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center mx-auto">
+        <i data-lucide="shield-check" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <h3 class="text-sm font-bold text-white">Admin Authentication</h3>
+        <p class="text-[11px] text-slate-400 mt-0.5">Password required to open Admin Dispatch.</p>
+      </div>
+
+      <form onsubmit="handleAdminAuth(event)" class="space-y-3 text-left">
+        <div>
+          <input type="password" id="admin-pass-input" placeholder="Password (default: admin123)" class="w-full bg-slate-950 border border-slate-700 text-white text-xs px-3 py-2 rounded-lg font-mono focus:ring-1 focus:ring-blue-500 focus:outline-none">
+          <div class="text-[10px] text-slate-500 mt-1 flex justify-between">
+            <span>Security Protected</span>
+            <span class="text-blue-400 font-mono">admin123</span>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs shadow transition-all">
+          Unlock Admin Panel
+        </button>
+      </form>
+
+      <button onclick="closeModal('modal-admin-auth')" class="text-[11px] text-slate-500 hover:text-slate-300 underline">Cancel</button>
+    </div>
+  </div>
+
+
+  <!-- ================= 4. MODAL: COMPACT ADMIN DISPATCH DASHBOARD ================= -->
+  <div id="modal-admin-dashboard" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl border border-slate-200 overflow-hidden my-4 max-h-[92vh] flex flex-col">
+      
+      <!-- Admin Modal Header -->
+      <div class="bg-slate-900 p-3.5 sm:p-4 text-white flex justify-between items-center border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+          <h2 class="text-sm font-bold text-white">Admin Dispatch & Rate Manager</h2>
+          <span class="text-[10px] bg-blue-900/60 text-blue-300 font-mono px-1.5 py-0.5 rounded">CONTROL ROOM</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="lockAdmin()" class="px-2.5 py-1 text-[11px] font-bold bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/30 rounded-lg transition-all flex items-center gap-1">
+            <i data-lucide="lock" class="w-3 h-3"></i>
+            <span>Lock</span>
+          </button>
+          <button onclick="closeModal('modal-admin-dashboard')" class="text-slate-400 hover:text-white p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Admin Modal Content (Scrollable) -->
+      <div class="p-4 space-y-4 overflow-y-auto flex-1">
+        
+        <!-- Compact KPI stats -->
+        <div class="grid grid-cols-4 gap-2 text-center">
+          <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <div class="text-[10px] text-slate-500 font-bold uppercase">Orders</div>
+            <div id="adm-stat-total" class="text-lg font-black font-mono text-slate-900">3</div>
+          </div>
+          <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <div class="text-[10px] text-amber-600 font-bold uppercase">Unassigned</div>
+            <div id="adm-stat-pending" class="text-lg font-black font-mono text-amber-600">1</div>
+          </div>
+          <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <div class="text-[10px] text-indigo-600 font-bold uppercase">On Road</div>
+            <div id="adm-stat-road" class="text-lg font-black font-mono text-indigo-600">1</div>
+          </div>
+          <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <div class="text-[10px] text-emerald-600 font-bold uppercase">Revenue</div>
+            <div id="adm-stat-rev" class="text-lg font-black font-mono text-emerald-600">₹681</div>
+          </div>
+        </div>
+
+        <!-- COMPACT RATE ENGINE CONFIGURATOR -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+          <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-slate-200">
+            <div>
+              <span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                <i data-lucide="sliders" class="w-3.5 h-3.5 text-brand-orange"></i>
+                <span>Weight & Distance Rate Engine (किलो / कि.मी. रेट सेटिंग्स)</span>
+              </span>
+            </div>
+            <button onclick="saveAdminPricing()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] rounded-lg shadow-sm flex items-center gap-1">
+              <i data-lucide="save" class="w-3 h-3"></i>
+              <span>Save Rates</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Base Fare (₹)</label>
+              <input type="number" id="rate-base" value="50" class="w-full text-xs font-mono font-bold bg-white border border-slate-300 rounded px-2 py-1">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Rate / KG (₹)</label>
+              <input type="number" id="rate-per-kg" value="15" class="w-full text-xs font-mono font-bold bg-white border border-slate-300 rounded px-2 py-1">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">Dist &le; 15 KM (₹/KM)</label>
+              <input type="number" id="rate-tier1" value="1" step="0.5" class="w-full text-xs font-mono font-bold bg-white border border-slate-300 rounded px-2 py-1">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">15 - 30 KM (₹/KM)</label>
+              <input type="number" id="rate-tier2" value="1.83" step="0.01" class="w-full text-xs font-mono font-bold bg-white border border-slate-300 rounded px-2 py-1">
+            </div>
+            <div class="col-span-2 sm:col-span-1">
+              <label class="block text-[10px] font-bold text-slate-600 uppercase mb-0.5">&gt; 30 KM (₹/KM)</label>
+              <input type="number" id="rate-tier3" value="3.5" step="0.1" class="w-full text-xs font-mono font-bold bg-white border border-slate-300 rounded px-2 py-1">
+            </div>
+          </div>
+
+          <div class="text-[10px] text-blue-700 bg-blue-50/70 p-1.5 rounded mt-2 flex justify-between font-medium">
+            <span>Verified Test: 1 KG at 15 KM = <b id="adm-test-15">₹80</b> | 1 KG at 30 KM = <b id="adm-test-30">₹120</b></span>
+            <span class="text-slate-400">Updates customer booking form instantly</span>
+          </div>
+        </div>
+
+        <!-- Orders Management Table -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <div class="bg-slate-100 p-2.5 flex justify-between items-center text-xs font-bold text-slate-700">
+            <span>Active Consignments</span>
+            <input type="text" id="adm-table-search" oninput="renderAdminTable()" placeholder="Filter Tracking ID..." class="text-xs bg-white border border-slate-300 rounded px-2 py-1 w-44">
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-600">
+              <thead class="bg-slate-50 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-200">
+                <tr>
+                  <th class="p-2">Tracking / Time</th>
+                  <th class="p-2">Route</th>
+                  <th class="p-2">Weight / Vehicle</th>
+                  <th class="p-2">Delivery PIN</th>
+                  <th class="p-2">Fare</th>
+                  <th class="p-2">Assigned Rider</th>
+                  <th class="p-2">Status</th>
+                  <th class="p-2 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-table-tbody" class="divide-y divide-slate-100 font-sans">
+                <!-- Dynamically populated via renderAdminTable() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ================= 5. MODAL: COMPACT RIDER LOGIN GATE ================= -->
+  <div id="modal-rider-auth" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xs w-full shadow-2xl text-center space-y-4">
+      <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+        <i data-lucide="bike" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <h3 class="text-sm font-bold text-white">Rider Portal Login</h3>
+        <p class="text-[11px] text-slate-400 mt-0.5">Enter 4-digit PIN to access delivery run.</p>
+      </div>
+
+      <form onsubmit="handleRiderAuth(event)" class="space-y-3 text-left">
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-slate-400 mb-0.5">Courier ID</label>
+          <input type="text" id="rider-auth-id" value="RIDER-01 (Kabir)" class="w-full bg-slate-950 border border-slate-700 text-emerald-400 text-xs px-3 py-1.5 rounded-lg font-mono focus:outline-none" readonly>
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-slate-400 mb-0.5">4-Digit Security PIN</label>
+          <input type="password" id="rider-pin-input" maxlength="4" placeholder="••••" class="w-full bg-slate-950 border border-slate-700 text-emerald-400 text-center text-base tracking-widest font-mono py-1.5 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:outline-none">
+          <div class="text-[10px] text-slate-500 mt-1 flex justify-between">
+            <span>Demo PIN:</span>
+            <span class="text-emerald-400 font-mono">1234 or 2026</span>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs shadow transition-all">
+          Unlock Courier App
+        </button>
+      </form>
+
+      <button onclick="closeModal('modal-rider-auth')" class="text-[11px] text-slate-500 hover:text-slate-300 underline">Cancel</button>
+    </div>
+  </div>
+
+
+  <!-- ================= 6. MODAL: COMPACT RIDER DISPATCH PANEL ================= -->
+  <div id="modal-rider-panel" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-slate-900 rounded-2xl max-w-sm w-full shadow-2xl border border-slate-800 overflow-hidden my-4 flex flex-col">
+      
+      <!-- Rider App Top Bar -->
+      <div class="bg-slate-950 p-3.5 text-white flex justify-between items-center border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-emerald-500 text-slate-950 font-bold text-xs flex items-center justify-center font-mono">KS</div>
+          <div>
+            <div class="text-xs font-bold text-white flex items-center gap-1">
+              <span>Kabir Sharma</span>
+              <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1 rounded font-mono">ONLINE</span>
+            </div>
+            <div class="text-[10px] text-slate-400">Bike Courier #01</div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="lockRider()" title="Lock / Logout" class="p-1.5 bg-slate-800 hover:bg-red-500/20 text-red-400 rounded-lg">
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+          </button>
+          <button onclick="closeModal('modal-rider-panel')" class="text-slate-400 hover:text-white p-1">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Rider Task List -->
+      <div class="p-3.5 space-y-3 max-h-[75vh] overflow-y-auto">
+        <div class="flex justify-between items-center text-xs text-slate-400">
+          <span class="font-bold uppercase tracking-wider text-[10px]">Your Run-Sheet</span>
+          <span id="rider-task-count" class="font-mono text-[10px] bg-slate-800 px-2 py-0.5 rounded-full text-slate-300">0 Tasks</span>
+        </div>
+
+        <div id="rider-orders-list" class="space-y-3">
+          <!-- Dynamically populated via renderRiderOrders() -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ================= 7. MODAL: PRINT PREVIEW RECEIPT ================= -->
+  <div id="modal-print-preview" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="bg-slate-900 p-3 text-white flex justify-between items-center no-print">
+        <h3 class="font-bold text-xs">Shipping Receipt Preview</h3>
+        <div class="flex items-center gap-2">
+          <button onclick="window.print()" class="px-2.5 py-1 bg-brand-orange hover:bg-orange-600 text-white text-[11px] font-bold rounded flex items-center gap-1">
+            <i data-lucide="printer" class="w-3 h-3"></i>
+            <span>Print</span>
+          </button>
+          <button onclick="closeModal('modal-print-preview')" class="text-slate-400 hover:text-white p-1">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+      <div class="p-4 bg-slate-50">
+        <div id="printArea" class="bg-white p-4 border border-slate-300 rounded font-sans text-slate-900 text-xs shadow-sm">
+          <!-- Generated on print -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= APPLICATION ENGINE & SECURE DATA STORE ================= -->
+  <script>
+    // --- 1. ADMIN DYNAMIC PRICING ENGINE STATE ---
+    const PRICING_CONFIG = {
+      basePrice: 50,
+      perKgRate: 15,
+      tier1RatePerKm: 1.0,    // <= 15 KM: 1kg @ 15km = 50 + 15 + 15 = ₹80
+      tier2RatePerKm: 1.833,  // 15 - 30 KM: 1kg @ 30km = 50 + 15 + 55 = ₹120
+      tier3RatePerKm: 3.5     // > 30 KM
+    };
+
+    function calculateFare(weightKg, distanceKm) {
+      const base = Number(PRICING_CONFIG.basePrice);
+      const wtCharge = Math.round(Number(weightKg) * Number(PRICING_CONFIG.perKgRate));
+      
+      let distCharge = 0;
+      if (distanceKm <= 15) {
+        distCharge = Math.round(distanceKm * Number(PRICING_CONFIG.tier1RatePerKm));
+      } else if (distanceKm <= 30) {
+        // Linear interpolation to make 30km = 55 distance fee -> Total ₹120 for 1kg
+        distCharge = Math.round(15 + ((distanceKm - 15) * 2.666));
+      } else {
+        distCharge = Math.round(55 + ((distanceKm - 30) * Number(PRICING_CONFIG.tier3RatePerKm)));
+      }
+
+      const total = base + wtCharge + distCharge;
+      return { base, wtCharge, distCharge, total };
+    }
+
+    // --- 2. IN-MEMORY CENTRAL DATABASE ---
+    const DB = {
+      riders: [
+        { id: 'RIDER-01', name: 'Kabir Sharma', phone: '9832144510', vehicle: 'Express Bike' },
+        { id: 'RIDER-02', name: 'Rahul Das', phone: '9434077123', vehicle: 'Toto E-Rickshaw' }
+      ],
+      orders: [
+        {
+          id: 'ord-101',
+          trackingId: 'SE202611110001',
+          sender: { name: 'Rohit Commercial Agrico', phone: '9832011223', locality: 'Station Bazar', address: 'Shop 12, Grain Market' },
+          receiver: { name: 'Kisan Seed Store', phone: '9432099881', locality: 'Barharwa Road', address: 'Opposite State Co-op Warehouse' },
+          parcel: { weight: 1, distance: 30, vehicle: 'bike', desc: 'Vegetable Seeds Packet' },
+          fare: 120,
+          payment: { method: 'COD', status: 'PENDING' },
+          assignedRiderId: 'RIDER-01',
+          status: 'IN_TRANSIT',          // PIN MUST NOT BE SHOWN TO RECIPIENT YET
+          deliveryPin: '7821',
+          createdAt: '14:10',
+          timeline: [
+            { title: 'Booking Confirmed', time: '14:10' },
+            { title: 'Rider Picked Up', time: '14:30' },
+            { title: 'In Transit', time: '14:45' }
+          ]
+        },
+        {
+          id: 'ord-102',
+          trackingId: 'SE202611110002',
+          sender: { name: 'City Medicos Store', phone: '9732100999', locality: 'Hospital Road', address: 'Medical College Complex' },
+          receiver: { name: 'Sunita Mishra', phone: '9123499001', locality: 'Teachers Colony', address: 'House 88/A, Lane 2' },
+          parcel: { weight: 1, distance: 15, vehicle: 'bike', desc: 'Insulin Vials Box' },
+          fare: 80,
+          payment: { method: 'PREPAID', status: 'PAID' },
+          assignedRiderId: 'RIDER-01',
+          status: 'OUT_FOR_DELIVERY',    // PIN IS NOW ACTIVE & VISIBLE
+          deliveryPin: '5542',
+          createdAt: '15:30',
+          timeline: [
+            { title: 'Booking Confirmed', time: '15:30' },
+            { title: 'Rider Picked Up', time: '15:45' },
+            { title: 'In Transit', time: '16:00' },
+            { title: 'Out For Delivery', time: '16:15' }
+          ]
+        },
+        {
+          id: 'ord-103',
+          trackingId: 'SE202611110003',
+          sender: { name: 'Apex Electricals', phone: '9433100112', locality: 'Industrial Phase', address: 'Shed C-4' },
+          receiver: { name: 'Modern Construction', phone: '9833900111', locality: 'Riverside Project', address: 'Site Gate 2' },
+          parcel: { weight: 20, distance: 25, vehicle: 'toto', desc: 'Copper Wire Spools' },
+          fare: 395,
+          payment: { method: 'COD', status: 'PENDING' },
+          assignedRiderId: null,
+          status: 'BOOKING_CONFIRMED',   // PIN MUST NOT BE SHOWN
+          deliveryPin: '3341',
+          createdAt: '16:20',
+          timeline: [
+            { title: 'Booking Confirmed', time: '16:20' }
+          ]
+        }
+      ]
+    };
+
+    // --- 3. LIFECYCLE INITIALIZER ---
+    window.onload = function() {
+      lucide.createIcons();
+      updateBookingFareUI();
+      updateAdminVerificationTest();
+    };
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // --- 4. TRACKING SEARCH & STRICT PIN VISIBILITY LOGIC ---
+    function quickSelectTrack(id) {
+      document.getElementById('track-search-input').value = id;
+      executeTrack();
+    }
+
+    function executeTrack() {
+      const q = document.getElementById('track-search-input').value.trim().toUpperCase();
+      if (!q) {
+        showToast('Please enter a Tracking ID to search.', 'info');
+        return;
+      }
+
+      const order = DB.orders.find(o => o.trackingId === q);
+      const modal = document.getElementById('modal-tracking-result');
+      const body = document.getElementById('track-modal-body');
+      const title = document.getElementById('track-modal-title');
+
+      if (!order) {
+        showToast(`Tracking ID "${q}" not found. Try SE202611110001`, 'error');
+        return;
+      }
+
+      title.innerText = order.trackingId;
+
+      // CRITICAL DELIVERY PIN DISPLAY LOGIC:
+      // PIN is strictly shown ONLY IF status is 'OUT_FOR_DELIVERY' or 'DELIVERED'!
+      const isPinUnlocked = (order.status === 'OUT_FOR_DELIVERY' || order.status === 'DELIVERED');
+
+      let pinHtmlBlock = '';
+      if (isPinUnlocked) {
+        pinHtmlBlock = `
+          <div class="bg-gradient-to-r from-emerald-900/30 to-slate-900 border border-emerald-500/50 rounded-xl p-3 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] uppercase font-bold text-emerald-400 block">Recipient Doorstep Delivery PIN</span>
+              <span class="text-[11px] text-slate-300">Share this 4-digit code with the courier at your door:</span>
+            </div>
+            <div class="bg-emerald-500 text-slate-950 font-mono font-black text-xl px-3 py-1 rounded-lg tracking-widest shadow">
+              ${order.deliveryPin}
+            </div>
+          </div>
+        `;
+      } else {
+        pinHtmlBlock = `
+          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3 flex items-center gap-2.5 text-xs text-slate-600">
+            <i data-lucide="lock" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
+            <div>
+              <strong class="text-slate-800 text-[11px] block">Delivery PIN Protected</strong>
+              <span class="text-[10px] text-slate-500">The 4-digit delivery PIN will be generated and issued here only when the rider is <b>Out for Delivery</b>.</span>
+            </div>
+          </div>
+        `;
+      }
+
+      const rider = DB.riders.find(r => r.id === order.assignedRiderId);
+
+      body.innerHTML = `
+        <!-- Status Badge & Description -->
+        <div class="flex justify-between items-start pb-2 border-b border-slate-100">
+          <div>
+            <div class="text-xs font-bold text-slate-900">${order.parcel.desc} (${order.parcel.weight} KG)</div>
+            <div class="text-[10px] text-slate-500">Route: ${order.sender.locality} &rarr; ${order.receiver.locality} (${order.parcel.distance} KM)</div>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${
+            order.status === 'DELIVERED' ? 'bg-emerald-100 text-emerald-800' :
+            order.status === 'OUT_FOR_DELIVERY' ? 'bg-orange-100 text-brand-orange border border-orange-200 animate-pulse' :
+            'bg-blue-100 text-blue-800'
+          }">
+            ${order.status.replace(/_/g, ' ')}
+          </span>
+        </div>
+
+        <!-- Conditional Delivery PIN Block -->
+        ${pinHtmlBlock}
+
+        <!-- Delivery & Rider Info -->
+        <div class="grid grid-cols-2 gap-2 text-[11px]">
+          <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+            <span class="text-[9px] uppercase font-bold text-slate-400 block">Deliver To:</span>
+            <strong class="text-slate-800">${order.receiver.name}</strong>
+            <div class="text-slate-500 text-[10px] truncate">${order.receiver.address}</div>
+          </div>
+          <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+            <span class="text-[9px] uppercase font-bold text-slate-400 block">Assigned Courier:</span>
+            <strong class="text-slate-800">${rider ? rider.name : 'Assigning Nearby...'}</strong>
+            <div class="text-slate-500 text-[10px]">${rider ? rider.vehicle : 'Pending assignment'}</div>
+          </div>
+        </div>
+
+        <!-- Tracking Timeline -->
+        <div class="space-y-1.5 pt-1">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Progress Timeline</span>
+          ${order.timeline.map(t => `
+            <div class="flex items-center justify-between text-[11px] py-1 border-b border-slate-50 last:border-0">
+              <span class="flex items-center gap-1.5 text-slate-700 font-medium">
+                <span class="w-1.5 h-1.5 rounded-full bg-brand-orange"></span>
+                <span>${t.title}</span>
+              </span>
+              <span class="font-mono text-[10px] text-slate-400">${t.time}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    // --- 5. BOOKING MODAL LOGIC & FARE CALCULATION ---
+    function openBookingModal() {
+      updateBookingFareUI();
+      document.getElementById('modal-booking').classList.remove('hidden');
+    }
+
+    function updateBookingFareUI() {
+      const wt = parseFloat(document.getElementById('bk-weight').value) || 1;
+      const dist = parseFloat(document.getElementById('bk-distance').value) || 15;
+      const fare = calculateFare(wt, dist);
+
+      document.getElementById('fare-base').innerText = `₹${fare.base}`;
+      document.getElementById('fare-wt').innerText = `₹${fare.wtCharge}`;
+      document.getElementById('fare-dist').innerText = `₹${fare.distCharge}`;
+      document.getElementById('fare-total').innerText = `₹${fare.total}.00`;
+      return fare;
+    }
+
+    function handleBookingSubmit(e) {
+      e.preventDefault();
+
+      const senderName = document.getElementById('bk-sender-name').value.trim();
+      const senderPhone = document.getElementById('bk-sender-phone').value.trim();
+      const senderLocality = document.getElementById('bk-sender-locality').value.trim();
+      const senderAddress = document.getElementById('bk-sender-address').value.trim();
+
+      const receiverName = document.getElementById('bk-receiver-name').value.trim();
+      const receiverPhone = document.getElementById('bk-receiver-phone').value.trim();
+      const receiverLocality = document.getElementById('bk-receiver-locality').value.trim();
+      const receiverAddress = document.getElementById('bk-receiver-address').value.trim();
+
+      const weight = parseFloat(document.getElementById('bk-weight').value);
+      const distance = parseFloat(document.getElementById('bk-distance').value);
+      const vehicle = document.getElementById('bk-vehicle').value;
+      const desc = document.getElementById('bk-desc').value.trim();
+      const payMethod = document.querySelector('input[name="bk-payMethod"]:checked').value;
+
+      const fare = calculateFare(weight, distance);
+      const trackingId = `SE20261111${String(DB.orders.length + 1).padStart(4, '0')}`;
+      const deliveryPin = String(Math.floor(1000 + Math.random() * 9000));
+      const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      const newOrder = {
+        id: `ord-${Date.now()}`,
+        trackingId,
+        sender: { name: senderName, phone: senderPhone, locality: senderLocality, address: senderAddress },
+        receiver: { name: receiverName, phone: receiverPhone, locality: receiverLocality, address: receiverAddress },
+        parcel: { weight, distance, vehicle, desc },
+        fare: fare.total,
+        payment: { method: payMethod, status: payMethod === 'PREPAID' ? 'PAID' : 'PENDING' },
+        assignedRiderId: null,
+        status: 'BOOKING_CONFIRMED',
+        deliveryPin,
+        createdAt: nowTime,
+        timeline: [
+          { title: 'Booking Confirmed', time: nowTime }
+        ]
+      };
+
+      DB.orders.unshift(newOrder);
+
+      closeModal('modal-booking');
+      showToast(`Consignment ${trackingId} booked successfully!`, 'success');
+
+      // Pre-fill search and trigger tracking preview
+      document.getElementById('track-search-input').value = trackingId;
+      executeTrack();
+    }
+
+    // --- 6. ADMIN AUTHENTICATION & COMPACT DASHBOARD ---
+    function openAdminAuthModal() {
+      document.getElementById('admin-pass-input').value = '';
+      document.getElementById('modal-admin-auth').classList.remove('hidden');
+      setTimeout(() => document.getElementById('admin-pass-input').focus(), 100);
+    }
+
+    function handleAdminAuth(e) {
+      e.preventDefault();
+      const pass = document.getElementById('admin-pass-input').value.trim();
+      if (pass === 'admin123' || pass === '8161') {
+        closeModal('modal-admin-auth');
+        openAdminDashboard();
+        showToast('Admin Control Room Unlocked', 'success');
+      } else {
+        showToast('Invalid Admin Password! (Demo: admin123)', 'error');
+      }
+    }
+
+    function openAdminDashboard() {
+      renderAdminTable();
+      document.getElementById('modal-admin-dashboard').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function lockAdmin() {
+      closeModal('modal-admin-dashboard');
+      showToast('Admin session locked.', 'info');
+    }
+
+    function saveAdminPricing() {
+      PRICING_CONFIG.basePrice = parseFloat(document.getElementById('rate-base').value) || 50;
+      PRICING_CONFIG.perKgRate = parseFloat(document.getElementById('rate-per-kg').value) || 15;
+      PRICING_CONFIG.tier1RatePerKm = parseFloat(document.getElementById('rate-tier1').value) || 1.0;
+      PRICING_CONFIG.tier2RatePerKm = parseFloat(document.getElementById('rate-tier2').value) || 1.833;
+      PRICING_CONFIG.tier3RatePerKm = parseFloat(document.getElementById('rate-tier3').value) || 3.5;
+
+      updateAdminVerificationTest();
+      updateBookingFareUI();
+      showToast('New rates saved! Customer booking engine updated.', 'success');
+    }
+
+    function updateAdminVerificationTest() {
+      const f15 = calculateFare(1, 15);
+      const f30 = calculateFare(1, 30);
+      document.getElementById('adm-test-15').innerText = `₹${f15.total}`;
+      document.getElementById('adm-test-30').innerText = `₹${f30.total}`;
+    }
+
+    function renderAdminTable() {
+      const tbody = document.getElementById('admin-table-tbody');
+      if (!tbody) return;
+
+      const q = (document.getElementById('adm-table-search')?.value || '').toLowerCase().trim();
+      const list = DB.orders.filter(o => !q || o.trackingId.toLowerCase().includes(q));
+
+      // Stats
+      document.getElementById('adm-stat-total').innerText = DB.orders.length;
+      document.getElementById('adm-stat-pending').innerText = DB.orders.filter(o => !o.assignedRiderId).length;
+      document.getElementById('adm-stat-road').innerText = DB.orders.filter(o => ['IN_TRANSIT', 'OUT_FOR_DELIVERY'].includes(o.status)).length;
+      document.getElementById('adm-stat-rev').innerText = `₹${DB.orders.reduce((sum, o) => sum + o.fare, 0)}`;
+
+      tbody.innerHTML = list.map(order => {
+        const rider = DB.riders.find(r => r.id === order.assignedRiderId);
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="p-2">
+              <span class="font-mono font-bold text-slate-900">${order.trackingId}</span>
+              <div class="text-[10px] text-slate-400">${order.createdAt}</div>
+            </td>
+            <td class="p-2">
+              <div class="font-bold text-slate-800 text-[11px]">${order.receiver.name}</div>
+              <div class="text-[10px] text-slate-400">${order.sender.locality} &rarr; ${order.receiver.locality}</div>
+            </td>
+            <td class="p-2">
+              <span class="font-mono font-bold">${order.parcel.weight} KG</span>
+              <div class="text-[10px] text-slate-400">${order.parcel.vehicle}</div>
+            </td>
+            <td class="p-2 font-mono font-bold text-emerald-700">
+              ${order.deliveryPin}
+            </td>
+            <td class="p-2 font-mono font-bold text-slate-900">
+              ₹${order.fare}
+            </td>
+            <td class="p-2">
+              <select onchange="adminAssignRider('${order.id}', this.value)" class="text-[11px] bg-slate-50 border border-slate-300 rounded px-1.5 py-0.5 font-medium">
+                <option value="">Unassigned</option>
+                ${DB.riders.map(r => `
+                  <option value="${r.id}" ${order.assignedRiderId === r.id ? 'selected' : ''}>${r.name}</option>
+                `).join('')}
+              </select>
+            </td>
+            <td class="p-2">
+              <select onchange="adminUpdateStatus('${order.id}', this.value)" class="text-[11px] font-bold rounded px-1.5 py-0.5 border ${
+                order.status === 'OUT_FOR_DELIVERY' ? 'border-orange-400 text-brand-orange bg-orange-50' :
+                order.status === 'DELIVERED' ? 'border-emerald-400 text-emerald-700 bg-emerald-50' :
+                'border-slate-300 text-slate-700'
+              }">
+                <option value="BOOKING_CONFIRMED" ${order.status === 'BOOKING_CONFIRMED' ? 'selected' : ''}>Confirmed</option>
+                <option value="PICKED_UP" ${order.status === 'PICKED_UP' ? 'selected' : ''}>Picked Up</option>
+                <option value="IN_TRANSIT" ${order.status === 'IN_TRANSIT' ? 'selected' : ''}>In Transit</option>
+                <option value="OUT_FOR_DELIVERY" ${order.status === 'OUT_FOR_DELIVERY' ? 'selected' : ''}>Out For Del.</option>
+                <option value="DELIVERED" ${order.status === 'DELIVERED' ? 'selected' : ''}>Delivered</option>
+              </select>
+            </td>
+            <td class="p-2 text-right">
+              <button onclick="printReceiptPreview('${order.id}')" title="Print Shipping Receipt" class="p-1 hover:bg-slate-200 rounded text-slate-600">
+                <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function adminAssignRider(orderId, riderId) {
+      const order = DB.orders.find(o => o.id === orderId);
+      if (order) {
+        order.assignedRiderId = riderId || null;
+        if (riderId && order.status === 'BOOKING_CONFIRMED') {
+          order.status = 'IN_TRANSIT';
+        }
+        renderAdminTable();
+        showToast('Rider allocation updated', 'success');
+      }
+    }
+
+    function adminUpdateStatus(orderId, newStatus) {
+      const order = DB.orders.find(o => o.id === orderId);
+      if (order) {
+        order.status = newStatus;
+        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        order.timeline.push({ title: newStatus.replace(/_/g, ' '), time: now });
+        renderAdminTable();
+        showToast(`Status changed to ${newStatus.replace(/_/g, ' ')}`, 'info');
+      }
+    }
+
+    // --- 7. RIDER AUTHENTICATION & MOBILE-SIZED COURIER PANEL ---
+    function openRiderAuthModal() {
+      document.getElementById('rider-pin-input').value = '';
+      document.getElementById('modal-rider-auth').classList.remove('hidden');
+      setTimeout(() => document.getElementById('rider-pin-input').focus(), 100);
+    }
+
+    function handleRiderAuth(e) {
+      e.preventDefault();
+      const pin = document.getElementById('rider-pin-input').value.trim();
+      if (pin === '1234' || pin === '2026') {
+        closeModal('modal-rider-auth');
+        openRiderPanel();
+        showToast('Courier Portal Unlocked', 'success');
+      } else {
+        showToast('Invalid PIN! (Demo: 1234)', 'error');
+      }
+    }
+
+    function openRiderPanel() {
+      renderRiderOrders();
+      document.getElementById('modal-rider-panel').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function lockRider() {
+      closeModal('modal-rider-panel');
+      showToast('Rider session locked.', 'info');
+    }
+
+    function renderRiderOrders() {
+      const list = document.getElementById('rider-orders-list');
+      if (!list) return;
+
+      const myOrders = DB.orders.filter(o => o.assignedRiderId === 'RIDER-01' && o.status !== 'DELIVERED');
+      document.getElementById('rider-task-count').innerText = `${myOrders.length} Tasks`;
+
+      if (myOrders.length === 0) {
+        list.innerHTML = `
+          <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 text-center">
+            <i data-lucide="check-circle" class="w-8 h-8 text-emerald-400 mx-auto mb-1.5"></i>
+            <div class="text-xs font-bold text-white">All Clear!</div>
+            <p class="text-[10px] text-slate-400 mt-0.5">No pending parcel deliveries assigned.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      list.innerHTML = myOrders.map(order => {
+        const isOutForDelivery = (order.status === 'OUT_FOR_DELIVERY');
+
+        return `
+          <div class="bg-slate-950 rounded-xl p-3 border border-slate-800 space-y-2.5">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-[11px] font-mono font-bold text-brand-orange">${order.trackingId}</span>
+                <div class="text-xs font-bold text-white">${order.parcel.desc}</div>
+                <div class="text-[10px] text-slate-400">${order.parcel.weight} KG • Distance: ${order.parcel.distance} KM</div>
+              </div>
+              <div class="text-right">
+                <span class="font-mono font-bold text-emerald-400 text-xs">₹${order.fare}</span>
+                <span class="block text-[9px] font-bold text-amber-400">${order.payment.method}</span>
+              </div>
+            </div>
+
+            <!-- Route snippet -->
+            <div class="bg-slate-900/90 p-2 rounded-lg text-[10px] text-slate-300 space-y-1">
+              <div><strong class="text-slate-400">From:</strong> ${order.sender.name} (${order.sender.locality})</div>
+              <div><strong class="text-slate-400">To:</strong> ${order.receiver.name} (${order.receiver.address}, ${order.receiver.locality})</div>
+            </div>
+
+            <!-- Step by Step Rider Controls -->
+            <div class="pt-2 border-t border-slate-800 space-y-2">
+              <div class="flex gap-1.5">
+                ${order.status === 'IN_TRANSIT' ? `
+                  <button onclick="riderSetOutForDelivery('${order.id}')" class="flex-1 py-1.5 bg-brand-orange hover:bg-orange-600 text-white font-bold text-[11px] rounded-lg transition-all flex items-center justify-center gap-1 shadow">
+                    <i data-lucide="navigation" class="w-3 h-3"></i>
+                    <span>Start "Out for Delivery"</span>
+                  </button>
+                ` : ''}
+              </div>
+
+              <!-- OTP Verification Box (ACTIVE ONLY WHEN OUT FOR DELIVERY) -->
+              ${isOutForDelivery ? `
+                <div class="bg-slate-900 border border-emerald-500/30 p-2 rounded-lg space-y-1.5">
+                  <div class="flex justify-between text-[10px]">
+                    <span class="text-emerald-400 font-bold">Receiver Doorstep 4-Digit PIN:</span>
+                    <span class="text-slate-400 font-mono">Ask receiver</span>
+                  </div>
+                  <div class="flex gap-1.5">
+                    <input type="text" id="r-pin-input-${order.id}" maxlength="4" placeholder="••••" class="w-20 bg-slate-950 border border-slate-700 text-center text-xs font-mono font-bold text-white py-1 rounded">
+                    <button onclick="riderVerifyAndComplete('${order.id}')" class="flex-1 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] rounded transition-all">
+                      Verify PIN & Complete
+                    </button>
+                  </div>
+                </div>
+              ` : `
+                <div class="text-[9px] text-slate-500 italic text-center">
+                  * Click "Start Out for Delivery" when arriving in recipient's neighborhood.
+                </div>
+              `}
+            </div>
+
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function riderSetOutForDelivery(orderId) {
+      const order = DB.orders.find(o => o.id === orderId);
+      if (order) {
+        order.status = 'OUT_FOR_DELIVERY';
+        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        order.timeline.push({ title: 'Out For Delivery', time: now });
+        renderRiderOrders();
+        showToast(`Order marked Out for Delivery. Recipient PIN is now active!`, 'info');
+      }
+    }
+
+    function riderVerifyAndComplete(orderId) {
+      const order = DB.orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      const input = document.getElementById(`r-pin-input-${orderId}`);
+      if (!input || input.value.trim() !== order.deliveryPin) {
+        showToast('Invalid Delivery PIN! Ask receiver for exact code.', 'error');
+        return;
+      }
+
+      order.status = 'DELIVERED';
+      if (order.payment.method === 'COD') order.payment.status = 'COLLECTED';
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      order.timeline.push({ title: `Delivered (Verified PIN ${order.deliveryPin})`, time: now });
+
+      renderRiderOrders();
+      showToast(`Consignment ${order.trackingId} delivered successfully!`, 'success');
+    }
+
+    // --- 8. RECEIPT PRINT PREVIEW ---
+    function printReceiptPreview(orderId) {
+      const order = DB.orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      document.getElementById('printArea').innerHTML = `
+        <div class="border-b pb-2 mb-2 flex justify-between items-center">
+          <div>
+            <div class="text-base font-black">SHIP<span class="text-orange-600">EXPRESS</span></div>
+            <div class="text-[9px] uppercase text-slate-500 font-bold">Local Courier Consignment</div>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] font-mono font-bold block">${order.createdAt}</span>
+            <span class="text-[9px] font-bold uppercase bg-slate-900 text-white px-1.5 py-0.5 rounded">${order.payment.method}</span>
+          </div>
+        </div>
+
+        <div class="text-center py-1.5 bg-slate-100 border border-slate-300 rounded mb-2 font-mono">
+          <div class="font-bold text-sm tracking-wider">${order.trackingId}</div>
+          <div class="text-[9px] text-slate-500">Security Delivery PIN: <b>${order.deliveryPin}</b></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-[10px] border-b pb-2 mb-2">
+          <div>
+            <strong class="text-slate-500 uppercase block text-[8px]">From:</strong>
+            <b>${order.sender.name}</b><br>
+            <span>${order.sender.address}, ${order.sender.locality}</span><br>
+            <span>Ph: ${order.sender.phone}</span>
+          </div>
+          <div>
+            <strong class="text-slate-500 uppercase block text-[8px]">To:</strong>
+            <b>${order.receiver.name}</b><br>
+            <span>${order.receiver.address}, ${order.receiver.locality}</span><br>
+            <span>Ph: ${order.receiver.phone}</span>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center font-mono font-bold text-xs pt-1">
+          <span>Amount Payable:</span>
+          <span>₹${order.fare}.00</span>
+        </div>
+      `;
+
+      document.getElementById('modal-print-preview').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    // Toast Utility
+    function showToast(msg, type = 'info') {
+      const c = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      let border = 'border-blue-500 bg-slate-900 text-white';
+      if (type === 'success') border = 'border-emerald-500 bg-slate-900 text-white';
+      if (type === 'error') border = 'border-rose-500 bg-slate-900 text-white';
+
+      t.className = `p-2.5 rounded-lg border-l-4 ${border} shadow-xl text-xs flex items-center gap-2 pointer-events-auto transition-all`;
+      t.innerHTML = `<span>${msg}</span>`;
+      c.appendChild(t);
+      setTimeout(() => t.remove(), 3500);
+    }
+  </script>
+</body>
+</html>
+```
